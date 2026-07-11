@@ -13,6 +13,10 @@ _$ToyModelImpl _$$ToyModelImplFromJson(Map<String, dynamic> json) =>
       description: json['description'] as String,
       price: (json['price'] as num).toDouble(),
       imageUrl: json['imageUrl'] as String,
+      brand: json['brand'] as String? ?? '',
+      ageGroup: json['ageGroup'] as String? ?? '',
+      gender: json['gender'] as String? ?? '',
+      color: json['color'] as String? ?? '',
     );
 
 Map<String, dynamic> _$$ToyModelImplToJson(_$ToyModelImpl instance) =>
@@ -22,4 +26,8 @@ Map<String, dynamic> _$$ToyModelImplToJson(_$ToyModelImpl instance) =>
       'description': instance.description,
       'price': instance.price,
       'imageUrl': instance.imageUrl,
+      'brand': instance.brand,
+      'ageGroup': instance.ageGroup,
+      'gender': instance.gender,
+      'color': instance.color,
     };

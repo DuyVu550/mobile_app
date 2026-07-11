@@ -26,6 +26,10 @@ mixin _$ToyModel {
   String get description => throw _privateConstructorUsedError;
   double get price => throw _privateConstructorUsedError;
   String get imageUrl => throw _privateConstructorUsedError;
+  String get brand => throw _privateConstructorUsedError;
+  String get ageGroup => throw _privateConstructorUsedError;
+  String get gender => throw _privateConstructorUsedError;
+  String get color => throw _privateConstructorUsedError;
 
   /// Serializes this ToyModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -48,6 +52,10 @@ abstract class $ToyModelCopyWith<$Res> {
     String description,
     double price,
     String imageUrl,
+    String brand,
+    String ageGroup,
+    String gender,
+    String color,
   });
 }
 
@@ -71,6 +79,10 @@ class _$ToyModelCopyWithImpl<$Res, $Val extends ToyModel>
     Object? description = null,
     Object? price = null,
     Object? imageUrl = null,
+    Object? brand = null,
+    Object? ageGroup = null,
+    Object? gender = null,
+    Object? color = null,
   }) {
     return _then(
       _value.copyWith(
@@ -94,6 +106,22 @@ class _$ToyModelCopyWithImpl<$Res, $Val extends ToyModel>
                 ? _value.imageUrl
                 : imageUrl // ignore: cast_nullable_to_non_nullable
                       as String,
+            brand: null == brand
+                ? _value.brand
+                : brand // ignore: cast_nullable_to_non_nullable
+                      as String,
+            ageGroup: null == ageGroup
+                ? _value.ageGroup
+                : ageGroup // ignore: cast_nullable_to_non_nullable
+                      as String,
+            gender: null == gender
+                ? _value.gender
+                : gender // ignore: cast_nullable_to_non_nullable
+                      as String,
+            color: null == color
+                ? _value.color
+                : color // ignore: cast_nullable_to_non_nullable
+                      as String,
           )
           as $Val,
     );
@@ -115,6 +143,10 @@ abstract class _$$ToyModelImplCopyWith<$Res>
     String description,
     double price,
     String imageUrl,
+    String brand,
+    String ageGroup,
+    String gender,
+    String color,
   });
 }
 
@@ -137,6 +169,10 @@ class __$$ToyModelImplCopyWithImpl<$Res>
     Object? description = null,
     Object? price = null,
     Object? imageUrl = null,
+    Object? brand = null,
+    Object? ageGroup = null,
+    Object? gender = null,
+    Object? color = null,
   }) {
     return _then(
       _$ToyModelImpl(
@@ -160,6 +196,22 @@ class __$$ToyModelImplCopyWithImpl<$Res>
             ? _value.imageUrl
             : imageUrl // ignore: cast_nullable_to_non_nullable
                   as String,
+        brand: null == brand
+            ? _value.brand
+            : brand // ignore: cast_nullable_to_non_nullable
+                  as String,
+        ageGroup: null == ageGroup
+            ? _value.ageGroup
+            : ageGroup // ignore: cast_nullable_to_non_nullable
+                  as String,
+        gender: null == gender
+            ? _value.gender
+            : gender // ignore: cast_nullable_to_non_nullable
+                  as String,
+        color: null == color
+            ? _value.color
+            : color // ignore: cast_nullable_to_non_nullable
+                  as String,
       ),
     );
   }
@@ -174,6 +226,10 @@ class _$ToyModelImpl extends _ToyModel {
     required this.description,
     required this.price,
     required this.imageUrl,
+    this.brand = '',
+    this.ageGroup = '',
+    this.gender = '',
+    this.color = '',
   }) : super._();
 
   factory _$ToyModelImpl.fromJson(Map<String, dynamic> json) =>
@@ -189,10 +245,22 @@ class _$ToyModelImpl extends _ToyModel {
   final double price;
   @override
   final String imageUrl;
+  @override
+  @JsonKey()
+  final String brand;
+  @override
+  @JsonKey()
+  final String ageGroup;
+  @override
+  @JsonKey()
+  final String gender;
+  @override
+  @JsonKey()
+  final String color;
 
   @override
   String toString() {
-    return 'ToyModel(id: $id, name: $name, description: $description, price: $price, imageUrl: $imageUrl)';
+    return 'ToyModel(id: $id, name: $name, description: $description, price: $price, imageUrl: $imageUrl, brand: $brand, ageGroup: $ageGroup, gender: $gender, color: $color)';
   }
 
   @override
@@ -206,13 +274,28 @@ class _$ToyModelImpl extends _ToyModel {
                 other.description == description) &&
             (identical(other.price, price) || other.price == price) &&
             (identical(other.imageUrl, imageUrl) ||
-                other.imageUrl == imageUrl));
+                other.imageUrl == imageUrl) &&
+            (identical(other.brand, brand) || other.brand == brand) &&
+            (identical(other.ageGroup, ageGroup) ||
+                other.ageGroup == ageGroup) &&
+            (identical(other.gender, gender) || other.gender == gender) &&
+            (identical(other.color, color) || other.color == color));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, id, name, description, price, imageUrl);
+  int get hashCode => Object.hash(
+    runtimeType,
+    id,
+    name,
+    description,
+    price,
+    imageUrl,
+    brand,
+    ageGroup,
+    gender,
+    color,
+  );
 
   /// Create a copy of ToyModel
   /// with the given fields replaced by the non-null parameter values.
@@ -235,6 +318,10 @@ abstract class _ToyModel extends ToyModel {
     required final String description,
     required final double price,
     required final String imageUrl,
+    final String brand,
+    final String ageGroup,
+    final String gender,
+    final String color,
   }) = _$ToyModelImpl;
   const _ToyModel._() : super._();
 
@@ -251,6 +338,14 @@ abstract class _ToyModel extends ToyModel {
   double get price;
   @override
   String get imageUrl;
+  @override
+  String get brand;
+  @override
+  String get ageGroup;
+  @override
+  String get gender;
+  @override
+  String get color;
 
   /// Create a copy of ToyModel
   /// with the given fields replaced by the non-null parameter values.
