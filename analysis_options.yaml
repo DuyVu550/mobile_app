@@ -2,20 +2,18 @@
 # THÔNG TIN DỰ ÁN (PROJECT METADATA)
 # =============================================================================
 # 1. Dự án này làm gì:
-#    - Ứng dụng di động bán linh kiện điện tử (Electronic Components App). Cho phép người dùng tìm kiếm,
-#      xem danh mục sản phẩm, quản lý giỏ hàng và đặt mua linh kiện.
-#    - Module "Toy List" hiện tại là module mẫu (scaffold template)
-#      được xây dựng làm chuẩn để áp dụng thiết kế Clean Architecture và Riverpod.
+#    - Ứng dụng di động bán đồ điện tử (Electronics App). Cho phép người dùng tìm kiếm,
+#      xem danh mục sản phẩm, quản lý giỏ hàng và đặt mua đồ điện tử.
 #
 # 2. Cấu trúc thư mục chính:
 #    - Thiết kế theo cấu trúc Feature-First Clean Architecture:
 #      lib/features/
-#      ├── toy_list/      # Module mẫu hiển thị danh sách sản phẩm đồ chơi làm chuẩn
-#      │   ├── data/      # Nguồn dữ liệu (Mock, API), DTO Models, Repository Impl
-#      │   ├── domain/    # Core logic (Entities, Repository Interface, UseCases)
-#      │   └── presentation/ # Widgets UI và State Notifiers (Riverpod)
-#      └── [feature_name]/ # Các tính năng bán linh kiện khác (ví dụ: cart, checkout, auth)
-#          └── (tuân thủ cấu trúc tương tự như module toy_list)
+#      ├── auth/          # Tính năng xác thực & tài khoản người dùng
+#      ├── home/          # Trang chủ chính của ứng dụng đồ điện tử
+#      └── [feature_name]/ # Các tính năng khác (ví dụ: cart, checkout, rating_review)
+#          ├── data/      # Nguồn dữ liệu (Mock, API), DTO Models, Repository Impl
+#          ├── domain/    # Core logic (Entities, Repository Interface, UseCases)
+#          └── presentation/ # Widgets UI và State Notifiers (Riverpod)
 #
 # 3. Tech Stack đang dùng:
 #    - Flutter SDK & Dart Language
@@ -31,23 +29,16 @@
 #      gọi UseCase tương ứng -> UseCase xử lý logic -> trả về Either ->
 #      cập nhật State -> UI tự động rebuild.
 #
-# 5. Những file/module cần chú ý (Dưới dạng Module Mẫu):
-#    - Entity: lib/features/toy_list/domain/entities/toy.dart
-#    - UseCase: lib/features/toy_list/domain/usecases/get_toys_usecase.dart
-#    - Model (Freezed): lib/features/toy_list/data/models/toy_model.dart
-#    - State & Notifier: lib/features/toy_list/presentation/controllers/toy_list_notifier.dart
-#    - Giao diện chính: lib/features/toy_list/presentation/views/toy_list_screen.dart
-#
-# 6. Quy ước code, naming, database:
+# 5. Quy ước code, naming, database:
 #    - Tính độc lập: Tầng Domain tuyệt đối không phụ thuộc hay import mã nguồn Flutter, Riverpod, hay Data.
 #    - Dependency Injection: Inject dependencies hoàn toàn bằng Riverpod Providers.
 #    - Bất biến (Immutability): Mọi Model dữ liệu và UI State phải dùng Freezed.
 #    - Naming conventions: Tên file dùng snake_case, Class dùng PascalCase, Provider dùng camelCase có hậu tố `Provider`.
 #
-# 7. Các tính năng chính của ứng dụng:
+# 6. Các tính năng chính của ứng dụng:
 #    * Role Admin:
 #      - Admin có thể Thêm, Sửa, Xóa, Tìm kiếm, Hiển thị danh sách các thể loại (category).
-#      - Admin có thể Thêm, Sửa, Xóa, Tìm kiếm, Hiển thị danh sách các sản phẩm linh kiện điện tử.
+#      - Admin có thể Thêm, Sửa, Xóa, Tìm kiếm, Hiển thị danh sách các sản phẩm đồ điện tử.
 #      - Admin có thể cập nhật trạng thái Order, hiển thị danh sách Orders của tất cả các users với 2 tab riêng biệt: Đang xử lý và Đã hoàn thành.
 #      - Admin có thể thực hiện phân quyền admin cho các tài khoản khác.
 #      - Admin có theo dõi doanh thu bán hàng theo thời gian.

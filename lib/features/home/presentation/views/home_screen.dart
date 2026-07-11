@@ -10,7 +10,7 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Linh Kiện Điện Tử'),
+        title: const Text('Đồ Điện Tử'),
         actions: [
           IconButton(
             icon: const Icon(Icons.person),
@@ -47,7 +47,7 @@ class HomeScreen extends ConsumerWidget {
         ],
       ),
       body: const Center(
-        child: Text('Chào mừng đến với cửa hàng Linh kiện điện tử!'),
+        child: Text('Chào mừng đến với cửa hàng Đồ điện tử!'),
       ),
     );
   }
