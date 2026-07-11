@@ -92,7 +92,7 @@ class ToyListScreen extends ConsumerWidget {
       loading: () => const Center(child: CircularProgressIndicator()),
       success: (allToys) {
         if (allToys.isEmpty) {
-          return const Center(child: Text('Không có sản phẩm nào.'));
+          return const Center(child: Text('Không tìm thấy đồ chơi nào.'));
         }
 
         final brands = ref.watch(brandsListProvider);

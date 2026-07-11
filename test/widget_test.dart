@@ -56,6 +56,13 @@ void main() {
   }
 
   testWidgets('hiển thị realtime + tìm kiếm theo tên', (tester) async {
+    tester.view.physicalSize = const Size(1200, 2500);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
     final firestore = await seededFirestore();
     await tester.pumpWidget(harness(firestore));
     // Không dùng pumpAndSettle: FeaturedToySlider có Timer.periodic chạy mãi.
