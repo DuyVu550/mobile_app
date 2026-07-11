@@ -2,6 +2,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import '../../domain/entities/toy.dart';
 import '../../domain/usecases/get_toys_usecase.dart';
+import '../../domain/usecases/watch_brands_usecase.dart';
+import '../../domain/entities/brand.dart';
 import '../../data/datasources/toy_remote_datasource.dart';
 import '../../data/repositories/toy_repository_impl.dart';
 import '../../domain/repositories/toy_repository.dart';
@@ -20,6 +22,10 @@ final toyRepositoryProvider = Provider<ToyRepository>((ref) {
 
 final watchToysUseCaseProvider = Provider<WatchToysUseCase>((ref) {
   return WatchToysUseCase(ref.watch(toyRepositoryProvider));
+});
+
+final watchBrandsUseCaseProvider = Provider<WatchBrandsUseCase>((ref) {
+  return WatchBrandsUseCase(ref.watch(toyRepositoryProvider));
 });
 
 final getToyByIdUseCaseProvider = Provider<GetToyByIdUseCase>((ref) {
@@ -64,9 +70,19 @@ class ToyFilter {
 final toyFilterProvider =
     StateProvider<ToyFilter>((ref) => const ToyFilter());
 
-/// Các giá trị brand phân biệt (đã bỏ rỗng, sắp xếp) để render danh sách.
-final brandOptionsProvider = Provider<List<String>>((ref) {
-  return _distinct(ref, (t) => t.brand);
+/// Nguồn realtime thương hiệu từ Firestore
+final brandsStreamProvider =
+    StreamProvider<Either<String, List<Brand>>>((ref) {
+  return ref.watch(watchBrandsUseCaseProvider).execute();
+});
+
+/// Danh sách các thương hiệu đã được bóc tách từ Stream
+final brandsListProvider = Provider<List<Brand>>((ref) {
+  return ref.watch(brandsStreamProvider).valueOrNull?.fold(
+        (_) => const <Brand>[],
+        (list) => list,
+      ) ??
+      const <Brand>[];
 });
 
 final ageGroupOptionsProvider = Provider<List<String>>((ref) {

@@ -3,7 +3,6 @@ import 'package:toy_app/features/toy_list/data/repositories/toy_repository_impl.
 import 'package:toy_app/features/toy_list/data/datasources/toy_remote_datasource.dart';
 import 'package:toy_app/features/toy_list/data/models/brand_model.dart';
 import 'package:toy_app/features/toy_list/data/models/toy_model.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FakeToyRemoteDataSource implements ToyRemoteDataSource {
   @override
@@ -18,9 +17,6 @@ class FakeToyRemoteDataSource implements ToyRemoteDataSource {
 
   @override
   Future<ToyModel?> fetchToyById(String id) async => null;
-
-  @override
-  FirebaseFirestore get _firestore => throw UnimplementedError();
 }
 
 void main() {
