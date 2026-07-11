@@ -2,12 +2,21 @@ import 'package:fpdart/fpdart.dart';
 import '../entities/toy.dart';
 import '../repositories/toy_repository.dart';
 
-class GetToysUseCase {
+/// Stream danh sách sản phẩm realtime.
+class WatchToysUseCase {
   final ToyRepository _repository;
 
-  const GetToysUseCase(this._repository);
+  const WatchToysUseCase(this._repository);
 
-  Future<Either<String, List<Toy>>> execute() async {
-    return await _repository.getToys();
-  }
+  Stream<Either<String, List<Toy>>> execute() => _repository.watchToys();
+}
+
+/// Lấy chi tiết 1 sản phẩm theo id.
+class GetToyByIdUseCase {
+  final ToyRepository _repository;
+
+  const GetToyByIdUseCase(this._repository);
+
+  Future<Either<String, Toy>> execute(String id) =>
+      _repository.getToyById(id);
 }
