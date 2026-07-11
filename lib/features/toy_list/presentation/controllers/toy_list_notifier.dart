@@ -93,6 +93,22 @@ final genderOptionsProvider = Provider<List<String>>((ref) {
   return _distinct(ref, (t) => t.gender);
 });
 
+// StateProviders for tracking active selections in individual home sections.
+final selectedBrandSectionProvider = StateProvider<String>((ref) {
+  final brands = ref.watch(brandsListProvider);
+  return brands.isNotEmpty ? brands.first.name : '';
+});
+
+final selectedAgeSectionProvider = StateProvider<String>((ref) {
+  final ages = ref.watch(ageGroupOptionsProvider);
+  return ages.isNotEmpty ? ages.first : '';
+});
+
+final selectedGenderSectionProvider = StateProvider<String>((ref) {
+  final genders = ref.watch(genderOptionsProvider);
+  return genders.isNotEmpty ? genders.first : '';
+});
+
 List<String> _distinct(Ref ref, String Function(Toy) selector) {
   final toys = ref.watch(toysStreamProvider).valueOrNull?.fold(
         (_) => const <Toy>[],
