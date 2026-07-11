@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:toy_app/features/toy_list/data/repositories/toy_repository_impl.dart';
 import 'package:toy_app/features/toy_list/data/datasources/toy_remote_datasource.dart';
 import 'package:toy_app/features/toy_list/data/models/brand_model.dart';
+import 'package:toy_app/features/toy_list/data/models/toy_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FakeToyRemoteDataSource implements ToyRemoteDataSource {
@@ -13,10 +14,10 @@ class FakeToyRemoteDataSource implements ToyRemoteDataSource {
   }
 
   @override
-  Stream<List<dynamic>> watchToys() => const Stream.empty();
+  Stream<List<ToyModel>> watchToys() => const Stream.empty();
 
   @override
-  Future<dynamic> fetchToyById(String id) async => null;
+  Future<ToyModel?> fetchToyById(String id) async => null;
 
   @override
   FirebaseFirestore get _firestore => throw UnimplementedError();

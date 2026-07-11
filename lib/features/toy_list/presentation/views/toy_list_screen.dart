@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../controllers/toy_list_notifier.dart';
 import '../controllers/toy_list_state.dart';
 import 'widgets/featured_toy_slider.dart';
+import 'widgets/toy_filter_bar.dart';
+import 'toy_detail_screen.dart';
 import '../../../auth/presentation/views/profile_screen.dart';
 
 class ToyListScreen extends ConsumerWidget {
@@ -44,6 +46,8 @@ class ToyListScreen extends ConsumerWidget {
               ),
             ),
           ),
+          const ToyFilterBar(),
+          const SizedBox(height: 8),
           Expanded(
             child: _buildBody(ref, state),
           ),
@@ -81,6 +85,9 @@ class ToyListScreen extends ConsumerWidget {
                   '\$${toy.price.toStringAsFixed(2)}',
                   style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold, fontSize: 16),
                 ),
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => ToyDetailScreen(toy: toy)),
+                ),
               ),
             );
           },
@@ -93,7 +100,7 @@ class ToyListScreen extends ConsumerWidget {
             Text('Failed to load toys: $message', style: const TextStyle(color: Colors.red)),
             const SizedBox(height: 16),
             ElevatedButton(
-              onPressed: () => ref.read(toyListNotifierProvider.notifier).loadToys(),
+              onPressed: () => ref.read(toyListNotifierProvider.notifier).reload(),
               child: const Text('Retry'),
             )
           ],
