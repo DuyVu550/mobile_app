@@ -2,19 +2,19 @@
 # THÔNG TIN DỰ ÁN (PROJECT METADATA)
 # =============================================================================
 # 1. Dự án này làm gì:
-#    - Ứng dụng di động bán đồ chơi trẻ em (Toy App). Cho phép người dùng tìm kiếm,
-#      xem danh mục sản phẩm, quản lý giỏ hàng và đặt mua đồ chơi.
+#    - Ứng dụng di động bán linh kiện điện tử (Electronic Components App). Cho phép người dùng tìm kiếm,
+#      xem danh mục sản phẩm, quản lý giỏ hàng và đặt mua linh kiện.
 #    - Module "Toy List" hiện tại là module mẫu (scaffold template)
 #      được xây dựng làm chuẩn để áp dụng thiết kế Clean Architecture và Riverpod.
 #
 # 2. Cấu trúc thư mục chính:
 #    - Thiết kế theo cấu trúc Feature-First Clean Architecture:
 #      lib/features/
-#      ├── toy_list/      # Module mẫu hiển thị danh sách sản phẩm đồ chơi
+#      ├── toy_list/      # Module mẫu hiển thị danh sách sản phẩm đồ chơi làm chuẩn
 #      │   ├── data/      # Nguồn dữ liệu (Mock, API), DTO Models, Repository Impl
 #      │   ├── domain/    # Core logic (Entities, Repository Interface, UseCases)
 #      │   └── presentation/ # Widgets UI và State Notifiers (Riverpod)
-#      └── [feature_name]/ # Các tính năng bán đồ chơi khác (ví dụ: cart, checkout, auth)
+#      └── [feature_name]/ # Các tính năng bán linh kiện khác (ví dụ: cart, checkout, auth)
 #          └── (tuân thủ cấu trúc tương tự như module toy_list)
 #
 # 3. Tech Stack đang dùng:
@@ -46,31 +46,29 @@
 #
 # 7. Các tính năng chính của ứng dụng:
 #    * Role Admin:
-#      - Thêm, Sửa, Xóa, Tìm kiếm, Hiển thị danh sách các thương hiệu (brand).
-#      - Thêm, Sửa, Xóa, Tìm kiếm, Hiển thị danh sách các sản phẩm đồ chơi.
-#      - Thêm, Sửa, Xóa, Tìm kiếm, Hiển thị danh sách sub-category các độ tuổi khác nhau.
-#      - Thêm, Sửa, Xóa, Tìm kiếm, Hiển thị danh sách sub-category các giới tính khác nhau.
-#      - Thêm, Sửa, Xóa, Tìm kiếm, Hiển thị danh sách các màu sắc sản phẩm khác nhau.
-#      - Thêm, Sửa, Xóa, Hiển thị danh sách các chương trình khuyến mại khác nhau.
-#      - Xem danh sách các ý kiến đóng góp, phản hồi về ứng dụng của tất cả người dùng.
-#      - Xem danh sách order của tất cả người dùng theo 2 trạng thái: Đang xử lý hoặc Đã hoàn thành. Admin có thể thực hiện cập nhật trạng thái đơn hàng cụ thể nào đó.
+#      - Admin có thể Thêm, Sửa, Xóa, Tìm kiếm, Hiển thị danh sách các thể loại (category).
+#      - Admin có thể Thêm, Sửa, Xóa, Tìm kiếm, Hiển thị danh sách các sản phẩm linh kiện điện tử.
+#      - Admin có thể cập nhật trạng thái Order, hiển thị danh sách Orders của tất cả các users với 2 tab riêng biệt: Đang xử lý và Đã hoàn thành.
+#      - Admin có thể thực hiện phân quyền admin cho các tài khoản khác.
+#      - Admin có theo dõi doanh thu bán hàng theo thời gian.
+#      - Admin có theo dõi danh sách các sản phẩm bán chạy nhất theo thời gian.
+#      - Admin có thể Thêm, Sửa, Xóa, Hiển thị danh sách các chương trình khuyến mại để kích cầu người mua.
+#      - Admin có thể theo dõi danh sách phản hồi, đóng góp ý kiến của tất cả các users về ứng dụng.
 #
 #    * Role Users:
-#      - Module User: đăng nhập, đăng ký, quên mật khẩu, đổi mật khẩu, hiển thị user profile, đăng xuất.
-#      - Tìm kiếm sản phẩm đồ chơi theo tên (nhập keyword).
-#      - Hiển thị Slide Image: những sản phẩm đồ chơi nổi bật, cứ sau 3s tự động chuyển slide.
-#      - Hiển thị danh sách các thương hiệu đồ chơi (brand), click vào mỗi thương hiệu sẽ hiển thị danh sách các sản phẩm đồ chơi thuộc thương hiệu đó.
-#      - Hiển thị sản phẩm đồ chơi theo từng thể loại nhỏ (sub category): theo các thương hiệu khác nhau, theo các độ tuổi khác nhau, theo các giới tính khác nhau.
-#      - Hiển thị danh sách các sản phẩm đồ chơi hoàn toàn Realtime từ Database trên Firebase.
-#      - Hiển thị chi tiết thông tin của sản phẩm đồ chơi (Detail): thương hiệu, độ tuổi, giới tính…
-#      - Xếp hạng và đánh giá sản phẩm đồ chơi (Rating & Review).
-#      - Giỏ hàng: Thêm đồ chơi vào giỏ hàng, chỉnh sửa số lượng trong giỏ hàng, xóa đồ chơi khỏi giỏ hàng.
-#      - Chọn Phương thức thanh toán, chọn Địa chỉ giao hàng, áp dụng Chương trình khuyến mại.
-#      - Đặt hàng, quản lý lịch sử đặt hàng theo trạng thái: Đang xử lý, Đã hoàn thành.
-#      - Theo dõi đơn hàng theo các bước: Quán nhận được đơn hàng, chuẩn bị đơn hàng, giao hàng cho khách.
-#      - Xếp hạng và đánh giá quá trình giao hàng.
-#      - Feedback: gửi phản hồi, đóng góp ý kiến hoặc đánh giá ứng dụng.
-#      - Hiển thị các phương thức liên hệ (contact) với nhà phát triển ứng dụng như: Facebook, Call Phone, Gmail, Skype, Zalo, Youtube.
+#      - Module user bao gồm các tính năng: đăng nhập, đăng ký, quên mật khẩu, đổi mật khẩu, hiển thị user profile, đăng xuất.
+#      - Tính năng tìm kiếm sản phẩm theo tên (nhập keyword).
+#      - Tính năng Slide Image: hiển thị những sản phẩm nổi bật, cứ sau 3s tự động chuyển slide một lần.
+#      - Hiển thị danh sách sản phẩm hoàn toàn realtime từ Firebase Database. Các sản phẩm được phân chia theo từng thể loại khác nhau: Cảm biến, Đèn LED, Mạch điện… Mỗi một thể loại tương ứng với 1 Tab riêng biệt.
+#      - Tính năng lọc sản phẩm theo những tiêu chí khác nhau: lọc theo xếp hạng, lọc theo giá, lọc theo chương trình khuyến mại…
+#      - Hiển thị chi tiết thông tin của sản phẩm (Detail): ảnh, tên, miêu tả, thông số kỹ thuật của sản phẩm…
+#      - Tính năng Xếp hạng và đánh giá sản phẩm (Rating & Review).
+#      - Tính năng giỏ hàng: Thêm sản phẩm vào giỏ hàng, chỉnh sửa số lượng trong giỏ hàng, xóa sản phẩm khỏi giỏ hàng.
+#      - Tính năng chọn Phương thức thanh toán, chọn Địa chỉ giao hàng, áp dụng Chương trình khuyến mại.
+#      - Tính năng đặt hàng, quản lý lịch sử đặt hàng theo trạng thái: Đang xử lý, Đã hoàn thành.
+#      - Tính năng theo dõi đơn hàng theo các bước: Quán nhận được đơn hàng, chuẩn bị đơn hàng, giao hàng cho khách.
+#      - Tính năng xếp hạng và đánh giá quá trình giao hàng.
+#      - Tính năng Feedback: gửi phản hồi, đóng góp ý kiến hoặc đánh giá ứng dụng.
 # =============================================================================
 
 # This file configures the analyzer, which statically analyzes Dart code to

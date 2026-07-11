@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../controllers/auth_providers.dart';
-import '../../../toy_list/presentation/views/toy_list_screen.dart';
+import '../../../home/presentation/views/home_screen.dart';
 import 'login_screen.dart';
 
 /// Lắng nghe trạng thái đăng nhập và điều hướng:
-/// - Có user  -> màn hình chính (ToyListScreen)
+/// - Có user  -> màn hình chính (HomeScreen)
 /// - Chưa có  -> màn hình đăng nhập
 class AuthGate extends ConsumerWidget {
   const AuthGate({super.key});
@@ -16,7 +16,7 @@ class AuthGate extends ConsumerWidget {
 
     return authState.when(
       data: (user) =>
-          user == null ? const LoginScreen() : const ToyListScreen(),
+          user == null ? const LoginScreen() : const HomeScreen(),
       loading: () => const Scaffold(
         body: Center(child: CircularProgressIndicator()),
       ),
