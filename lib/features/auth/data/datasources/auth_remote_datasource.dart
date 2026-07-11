@@ -1,0 +1,65 @@
+import 'package:firebase_auth/firebase_auth.dart';
+
+/// Bọc FirebaseAuth. Trả thẳng User của Firebase / ném FirebaseAuthException
+/// để tầng repository map sang thông điệp lỗi.
+class AuthRemoteDataSource {
+  final FirebaseAuth _firebaseAuth;
+
+  AuthRemoteDataSource(this._firebaseAuth);
+
+  Stream<User?> authStateChanges() => _firebaseAuth.authStateChanges();
+
+  User? get currentUser => _firebaseAuth.currentUser;
+
+  Future<User> signIn({
+    required String email,
+    required String password,
+  }) async {
+    final credential = await _firebaseAuth.signInWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+    return credential.user!;
+  }
+
+  Future<User> signUp({
+    required String email,
+    required String password,
+    required String displayName,
+  }) async {
+    final credential = await _firebaseAuth.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+    final user = credential.user!;
+    await user.updateDisplayName(displayName);
+    await user.reload();
+    return _firebaseAuth.currentUser ?? user;
+  }
+
+  Future<void> signOut() => _firebaseAuth.signOut();
+
+  Future<void> sendPasswordReset({required String email}) {
+    return _firebaseAuth.sendPasswordResetEmail(email: email);
+  }
+
+  Future<void> changePassword({
+    required String currentPassword,
+    required String newPassword,
+  }) async {
+    final user = _firebaseAuth.currentUser;
+    if (user == null || user.email == null) {
+      throw FirebaseAuthException(
+        code: 'no-current-user',
+        message: 'Chưa đăng nhập.',
+      );
+    }
+    // Xác thực lại trước khi đổi mật khẩu (Firebase yêu cầu phiên gần đây).
+    final credential = EmailAuthProvider.credential(
+      email: user.email!,
+      password: currentPassword,
+    );
+    await user.reauthenticateWithCredential(credential);
+    await user.updatePassword(newPassword);
+  }
+}

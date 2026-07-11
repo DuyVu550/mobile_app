@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "168114649559",
+    "firebase_url": "https://trippo-73fd7-default-rtdb.firebaseio.com",
+    "project_id": "trippo-73fd7",
+    "storage_bucket": "trippo-73fd7.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:168114649559:android:df5b9fcd5ba803220ff392",
+        "android_client_info": {
+          "package_name": "com.example.toy_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "168114649559-rbo2kqh44019i0ohr3r4na68j5mfpfj0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDxXyLrfPq42UzbVPNOMnFrCDuqgMqm6mQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "168114649559-rbo2kqh44019i0ohr3r4na68j5mfpfj0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

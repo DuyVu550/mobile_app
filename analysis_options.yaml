@@ -1,0 +1,103 @@
+# =============================================================================
+# THÔNG TIN DỰ ÁN (PROJECT METADATA)
+# =============================================================================
+# 1. Dự án này làm gì:
+#    - Ứng dụng di động bán đồ chơi trẻ em (Toy App). Cho phép người dùng tìm kiếm,
+#      xem danh mục sản phẩm, quản lý giỏ hàng và đặt mua đồ chơi.
+#    - Module "Toy List" hiện tại là module mẫu (scaffold template)
+#      được xây dựng làm chuẩn để áp dụng thiết kế Clean Architecture và Riverpod.
+#
+# 2. Cấu trúc thư mục chính:
+#    - Thiết kế theo cấu trúc Feature-First Clean Architecture:
+#      lib/features/
+#      ├── toy_list/      # Module mẫu hiển thị danh sách sản phẩm đồ chơi
+#      │   ├── data/      # Nguồn dữ liệu (Mock, API), DTO Models, Repository Impl
+#      │   ├── domain/    # Core logic (Entities, Repository Interface, UseCases)
+#      │   └── presentation/ # Widgets UI và State Notifiers (Riverpod)
+#      └── [feature_name]/ # Các tính năng bán đồ chơi khác (ví dụ: cart, checkout, auth)
+#          └── (tuân thủ cấu trúc tương tự như module toy_list)
+#
+# 3. Tech Stack đang dùng:
+#    - Flutter SDK & Dart Language
+#    - flutter_riverpod (Quản lý trạng thái & Dependency Injection)
+#    - freezed & freezed_annotation (Tạo code cho các model/state bất biến)
+#    - json_serializable & json_annotation (Tự động sinh code chuyển đổi JSON)
+#    - fpdart (Xử lý kết quả dạng Either cho lập trình hàm)
+#    - dio (Thư viện gọi API HTTP)
+#
+# 4. Luồng xử lý quan trọng:
+#    - Khi khởi chạy: Giao diện chính watch các Riverpod AutoDisposeNotifierProvider.
+#    - Khi người dùng tương tác: UI gọi các phương thức trong Notifier -> Notifier
+#      gọi UseCase tương ứng -> UseCase xử lý logic -> trả về Either ->
+#      cập nhật State -> UI tự động rebuild.
+#
+# 5. Những file/module cần chú ý (Dưới dạng Module Mẫu):
+#    - Entity: lib/features/toy_list/domain/entities/toy.dart
+#    - UseCase: lib/features/toy_list/domain/usecases/get_toys_usecase.dart
+#    - Model (Freezed): lib/features/toy_list/data/models/toy_model.dart
+#    - State & Notifier: lib/features/toy_list/presentation/controllers/toy_list_notifier.dart
+#    - Giao diện chính: lib/features/toy_list/presentation/views/toy_list_screen.dart
+#
+# 6. Quy ước code, naming, database:
+#    - Tính độc lập: Tầng Domain tuyệt đối không phụ thuộc hay import mã nguồn Flutter, Riverpod, hay Data.
+#    - Dependency Injection: Inject dependencies hoàn toàn bằng Riverpod Providers.
+#    - Bất biến (Immutability): Mọi Model dữ liệu và UI State phải dùng Freezed.
+#    - Naming conventions: Tên file dùng snake_case, Class dùng PascalCase, Provider dùng camelCase có hậu tố `Provider`.
+#
+# 7. Các tính năng chính của ứng dụng:
+#    * Role Admin:
+#      - Thêm, Sửa, Xóa, Tìm kiếm, Hiển thị danh sách các thương hiệu (brand).
+#      - Thêm, Sửa, Xóa, Tìm kiếm, Hiển thị danh sách các sản phẩm đồ chơi.
+#      - Thêm, Sửa, Xóa, Tìm kiếm, Hiển thị danh sách sub-category các độ tuổi khác nhau.
+#      - Thêm, Sửa, Xóa, Tìm kiếm, Hiển thị danh sách sub-category các giới tính khác nhau.
+#      - Thêm, Sửa, Xóa, Tìm kiếm, Hiển thị danh sách các màu sắc sản phẩm khác nhau.
+#      - Thêm, Sửa, Xóa, Hiển thị danh sách các chương trình khuyến mại khác nhau.
+#      - Xem danh sách các ý kiến đóng góp, phản hồi về ứng dụng của tất cả người dùng.
+#      - Xem danh sách order của tất cả người dùng theo 2 trạng thái: Đang xử lý hoặc Đã hoàn thành. Admin có thể thực hiện cập nhật trạng thái đơn hàng cụ thể nào đó.
+#
+#    * Role Users:
+#      - Module User: đăng nhập, đăng ký, quên mật khẩu, đổi mật khẩu, hiển thị user profile, đăng xuất.
+#      - Tìm kiếm sản phẩm đồ chơi theo tên (nhập keyword).
+#      - Hiển thị Slide Image: những sản phẩm đồ chơi nổi bật, cứ sau 3s tự động chuyển slide.
+#      - Hiển thị danh sách các thương hiệu đồ chơi (brand), click vào mỗi thương hiệu sẽ hiển thị danh sách các sản phẩm đồ chơi thuộc thương hiệu đó.
+#      - Hiển thị sản phẩm đồ chơi theo từng thể loại nhỏ (sub category): theo các thương hiệu khác nhau, theo các độ tuổi khác nhau, theo các giới tính khác nhau.
+#      - Hiển thị danh sách các sản phẩm đồ chơi hoàn toàn Realtime từ Database trên Firebase.
+#      - Hiển thị chi tiết thông tin của sản phẩm đồ chơi (Detail): thương hiệu, độ tuổi, giới tính…
+#      - Xếp hạng và đánh giá sản phẩm đồ chơi (Rating & Review).
+#      - Giỏ hàng: Thêm đồ chơi vào giỏ hàng, chỉnh sửa số lượng trong giỏ hàng, xóa đồ chơi khỏi giỏ hàng.
+#      - Chọn Phương thức thanh toán, chọn Địa chỉ giao hàng, áp dụng Chương trình khuyến mại.
+#      - Đặt hàng, quản lý lịch sử đặt hàng theo trạng thái: Đang xử lý, Đã hoàn thành.
+#      - Theo dõi đơn hàng theo các bước: Quán nhận được đơn hàng, chuẩn bị đơn hàng, giao hàng cho khách.
+#      - Xếp hạng và đánh giá quá trình giao hàng.
+#      - Feedback: gửi phản hồi, đóng góp ý kiến hoặc đánh giá ứng dụng.
+#      - Hiển thị các phương thức liên hệ (contact) với nhà phát triển ứng dụng như: Facebook, Call Phone, Gmail, Skype, Zalo, Youtube.
+# =============================================================================
+
+# This file configures the analyzer, which statically analyzes Dart code to
+# check for errors, warnings, and lints.
+#
+# The issues identified by the analyzer are surfaced in the UI of Dart-enabled
+# IDEs (https://dart.dev/tools#ides-and-editors). The analyzer can also be
+# invoked from the command line by running `flutter analyze`.
+
+# The following line activates a set of recommended lints for Flutter apps,
+# packages, and plugins designed to encourage good coding practices.
+include: package:flutter_lints/flutter.yaml
+
+linter:
+  # The lint rules applied to this project can be customized in the
+  # section below to disable rules from the `package:flutter_lints/flutter.yaml`
+  # included above or to enable additional rules. A list of all available lints
+  # and their documentation is published at https://dart.dev/lints.
+  #
+  # Instead of disabling a lint rule for the entire project in the
+  # section below, it can also be suppressed for a single line of code
+  # or a specific dart file by using the `// ignore: name_of_lint` and
+  # `// ignore_for_file: name_of_lint` syntax on the line or in the file
+  # producing the lint.
+  rules:
+    # avoid_print: false  # Uncomment to disable the `avoid_print` rule
+    # prefer_single_quotes: true  # Uncomment to enable the `prefer_single_quotes` rule
+
+# Additional information about this file can be found at
+# https://dart.dev/guides/language/analysis-options
