@@ -36,7 +36,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget build(BuildContext context) {
     final productsState = ref.watch(filteredProductsProvider);
     final searchVal = _searchController.text;
-    final categories = ref.watch(categoriesProvider);
+    final categoriesAsync = ref.watch(categoriesProvider);
+    final categories = categoriesAsync.valueOrNull ?? const ['Tất cả'];
     final listState = ref.watch(productListNotifierProvider);
 
     return Scaffold(

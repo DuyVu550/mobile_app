@@ -75,20 +75,19 @@ final productListNotifierProvider =
 
 /// Danh sách danh mục duy nhất được trích xuất động từ sản phẩm,
 /// sắp xếp theo bảng chữ cái và luôn có 'Tất cả' ở đầu.
-final categoriesProvider = Provider<List<String>>((ref) {
-  final state = ref.watch(productListNotifierProvider);
-  return state.products.maybeWhen(
-    data: (products) {
-      final uniqueCategories = products
-          .map((p) => p.category)
-          .where((c) => c.isNotEmpty)
-          .toSet()
-          .toList();
-      uniqueCategories.sort();
-      return ['Tất cả', ...uniqueCategories];
-    },
-    orElse: () => ['Tất cả'],
-  );
+final categoriesProvider = StreamProvider<List<String>>((ref) {
+  return ref
+      .watch(firestoreProvider)
+      .collection('categories')
+      .snapshots()
+      .map((snapshot) {
+    final names = snapshot.docs
+        .map((doc) => (doc.data()['name'] ?? '').toString())
+        .where((name) => name.isNotEmpty)
+        .toList();
+    names.sort();
+    return ['Tất cả', ...names];
+  });
 });
 
 /// Danh sách sản phẩm đã lọc theo danh mục và từ khóa tìm kiếm.

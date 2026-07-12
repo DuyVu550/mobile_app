@@ -3,6 +3,8 @@ import 'package:fpdart/fpdart.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:toy_app/features/products/domain/entities/product.dart';
 import 'package:toy_app/features/products/domain/repositories/product_repository.dart';
+import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
+import 'package:toy_app/core/providers/firebase_providers.dart';
 import 'package:toy_app/features/products/presentation/controllers/product_list_notifier.dart';
 
 class FakeProductRepository implements ProductRepository {
@@ -79,21 +81,20 @@ void main() {
     expect(filtered2?.first.name, 'Điện thoại iPhone');
   });
 
-  test('categoriesProvider extracts unique sorted categories with "Tất cả"',
+  test('categoriesProvider extracts unique sorted categories from Firestore with "Tất cả"',
       () async {
+    final firestore = FakeFirebaseFirestore();
+    await firestore.collection('categories').add({'name': 'Điện thoại'});
+    await firestore.collection('categories').add({'name': 'Laptop'});
+
     final container = ProviderContainer(
       overrides: [
-        productRepositoryProvider.overrideWithValue(FakeProductRepository()),
+        firestoreProvider.overrideWithValue(firestore),
       ],
     );
     addTearDown(container.dispose);
 
-    await container
-        .read(productListNotifierProvider.notifier)
-        .stream
-        .firstWhere((s) => s.products.hasValue);
-
-    final categories = container.read(categoriesProvider);
+    final categories = await container.read(categoriesProvider.future);
     expect(categories, ['Tất cả', 'Laptop', 'Điện thoại']); // Alphabetically sorted
   });
 
@@ -102,6 +103,7 @@ void main() {
     final container = ProviderContainer(
       overrides: [
         productRepositoryProvider.overrideWithValue(FakeProductRepository()),
+        categoriesProvider.overrideWith((ref) => Stream.value(['Tất cả', 'Điện thoại', 'Laptop'])),
       ],
     );
     addTearDown(container.dispose);
@@ -145,6 +147,7 @@ void main() {
     final container = ProviderContainer(
       overrides: [
         productRepositoryProvider.overrideWithValue(FakeProductRepository()),
+        categoriesProvider.overrideWith((ref) => Stream.value(['Tất cả', 'Điện thoại', 'Laptop'])),
       ],
     );
     addTearDown(container.dispose);

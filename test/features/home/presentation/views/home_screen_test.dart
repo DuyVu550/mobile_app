@@ -46,6 +46,7 @@ void main() {
       ProviderScope(
         overrides: [
           productRepositoryProvider.overrideWithValue(FakeProductRepository()),
+          categoriesProvider.overrideWith((ref) => Stream.value(['Tất cả', 'Điện thoại', 'Laptop'])),
         ],
         child: const MaterialApp(
           home: HomeScreen(),
