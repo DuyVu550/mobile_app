@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../../core/services/file_upload_service.dart';
+import '../../../products/presentation/views/category_admin_screen.dart';
 import '../controllers/auth_action_controller.dart';
 import '../controllers/auth_providers.dart';
 import '../../domain/entities/app_user.dart';
@@ -314,6 +315,8 @@ class ProfileScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authStateProvider);
+    final profileAsync = ref.watch(userProfileProvider);
+    final role = profileAsync.valueOrNull?['role'];
 
     return Scaffold(
       appBar: AppBar(
@@ -400,6 +403,21 @@ class ProfileScreen extends ConsumerWidget {
                     value: user.email,
                   ),
                   const SizedBox(height: 32),
+                  if (role == 'admin') ...[
+                    OutlinedButton.icon(
+                      onPressed: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => const CategoryAdminScreen(),
+                        ),
+                      ),
+                      icon: const Icon(Icons.category),
+                      label: const Text('Quản lý thể loại'),
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                  ],
                   OutlinedButton.icon(
                     onPressed: () => Navigator.of(context).push(
                       MaterialPageRoute(
