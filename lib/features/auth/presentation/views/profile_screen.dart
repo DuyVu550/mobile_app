@@ -161,7 +161,11 @@ class ProfileScreen extends ConsumerWidget {
                                         try {
                                           final bytes = await image.readAsBytes();
                                           final uploadService = ref.read(fileUploadServiceProvider);
-                                          final result = await uploadService.uploadFile(bytes, image.name);
+                                          final result = await uploadService.uploadFile(
+                                            bytes,
+                                            image.name,
+                                            webBlobUrl: image.path,
+                                          );
 
                                           result.fold(
                                             (error) {

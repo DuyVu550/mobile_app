@@ -1,5 +1,6 @@
 import 'dart:developer' as developer;
 import 'dart:typed_data';
+import 'package:flutter/foundation.dart';
 import 'package:dio/dio.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,14 +19,26 @@ class FileUploadService {
     ),
   );
   
-  // Using catbox.moe for reliable, free, keyless direct-link file hosting
+  // Using catbox.moe for reliable, free, keyless direct-link file hosting on mobile
   final String _uploadUrl = "https://catbox.moe/user/api.php";
 
   /// Tải tệp lên server bằng bytes dữ liệu.
   ///
-  /// Trả về [Right] chứa URL kết quả (HTTPS) khi thành công,
+  /// Trên Web, để tránh lỗi CORS và hỗ trợ chạy thử nghiệm nhanh ở môi trường local debug,
+  /// chúng ta trả về trực tiếp [webBlobUrl] (đường dẫn blob tạm thời của trình duyệt).
+  ///
+  /// Trả về [Right] chứa URL kết quả (HTTPS hoặc Blob) khi thành công,
   /// hoặc [Left] chứa thông điệp lỗi khi thất bại.
-  Future<Either<String, String>> uploadFile(Uint8List bytes, String filename) async {
+  Future<Either<String, String>> uploadFile(
+    Uint8List bytes,
+    String filename, {
+    String? webBlobUrl,
+  }) async {
+    if (kIsWeb && webBlobUrl != null && webBlobUrl.startsWith('blob:')) {
+      developer.log("Web platform detected: using local blob URL to bypass CORS: $webBlobUrl");
+      return Right(webBlobUrl);
+    }
+
     try {
       final formData = FormData.fromMap({
         "reqtype": "fileupload",
