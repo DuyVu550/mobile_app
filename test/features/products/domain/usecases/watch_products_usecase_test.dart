@@ -1,0 +1,39 @@
+import 'package:flutter_test/flutter_test.dart';
+import 'package:fpdart/fpdart.dart';
+import 'package:toy_app/features/products/domain/entities/product.dart';
+import 'package:toy_app/features/products/domain/repositories/product_repository.dart';
+import 'package:toy_app/features/products/domain/usecases/watch_products_usecase.dart';
+
+class FakeProductRepository implements ProductRepository {
+  @override
+  Stream<Either<String, List<Product>>> watchProducts() async* {
+    yield const Right([
+      Product(
+        id: 'p1',
+        name: 'Mạch Arduino Uno',
+        description: 'Mạch nạp vi điều khiển',
+        price: 150000.0,
+        imageUrl: 'arduino.png',
+        category: 'Mạch điện',
+      ),
+    ]);
+  }
+}
+
+void main() {
+  test('WatchProductsUseCase should execute and return list of products',
+      () async {
+    final repository = FakeProductRepository();
+    final useCase = WatchProductsUseCase(repository);
+
+    final result = await useCase.execute().first;
+    expect(result.isRight(), isTrue);
+    result.match(
+      (l) => fail('Should be right'),
+      (r) {
+        expect(r.length, 1);
+        expect(r.first.name, 'Mạch Arduino Uno');
+      },
+    );
+  });
+}
