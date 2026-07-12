@@ -29,4 +29,57 @@ void main() {
     expect(find.text('25000000đ'), findsOneWidget);
     expect(find.text('Điện thoại cao cấp của Apple'), findsOneWidget);
   });
+
+  testWidgets('ProductDetailScreen renders specifications table when specifications are present', (tester) async {
+    const product = Product(
+      id: 'p1',
+      name: 'iPhone 15 Pro',
+      description: 'Điện thoại cao cấp',
+      price: 25000000.0,
+      imageUrl: 'iphone15.png',
+      category: 'Điện thoại',
+      isFeatured: true,
+      rating: 4.8,
+      hasPromotion: true,
+      specifications: {
+        'RAM': '8 GB',
+        'Bộ nhớ': '128 GB',
+      },
+    );
+
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: ProductDetailScreen(product: product),
+      ),
+    );
+
+    expect(find.text('Thông số kỹ thuật'), findsOneWidget);
+    expect(find.text('RAM'), findsOneWidget);
+    expect(find.text('8 GB'), findsOneWidget);
+    expect(find.text('Bộ nhớ'), findsOneWidget);
+    expect(find.text('128 GB'), findsOneWidget);
+  });
+
+  testWidgets('ProductDetailScreen does not render specifications table when specifications are empty or null', (tester) async {
+    const product = Product(
+      id: 'p1',
+      name: 'iPhone 15 Pro',
+      description: 'Điện thoại cao cấp',
+      price: 25000000.0,
+      imageUrl: 'iphone15.png',
+      category: 'Điện thoại',
+      isFeatured: true,
+      rating: 4.8,
+      hasPromotion: true,
+      specifications: {},
+    );
+
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: ProductDetailScreen(product: product),
+      ),
+    );
+
+    expect(find.text('Thông số kỹ thuật'), findsNothing);
+  });
 }
