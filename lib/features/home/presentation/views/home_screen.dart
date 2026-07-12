@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../auth/presentation/controllers/auth_action_controller.dart';
 import '../../../auth/presentation/views/profile_screen.dart';
 import '../../../products/presentation/controllers/product_list_notifier.dart';
+import '../../../products/domain/entities/product.dart';
 import '../../../products/presentation/views/widgets/product_card.dart';
 import '../../../products/presentation/views/widgets/featured_product_slider.dart';
 
@@ -34,6 +35,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget build(BuildContext context) {
     final productsState = ref.watch(filteredProductsProvider);
     final searchVal = _searchController.text;
+    final categories = ref.watch(categoriesProvider);
+    final listState = ref.watch(productListNotifierProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -106,6 +109,34 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ),
             ),
           ),
+          // Thanh danh mục cuộn ngang.
+          SizedBox(
+            height: 48,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              itemCount: categories.length,
+              itemBuilder: (context, index) {
+                final category = categories[index];
+                final isSelected = listState.selectedCategory == category;
+                return Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: ChoiceChip(
+                    label: Text(category),
+                    selected: isSelected,
+                    onSelected: (selected) {
+                      if (selected) {
+                        ref
+                            .read(productListNotifierProvider.notifier)
+                            .selectCategory(category);
+                      }
+                    },
+                  ),
+                );
+              },
+            ),
+          ),
+          const SizedBox(height: 8),
           Expanded(
             child: productsState.when(
               data: (products) {
@@ -114,11 +145,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     child: Text('Không tìm thấy sản phẩm nào.'),
                   );
                 }
-                final featured =
-                    products.where((p) => p.isFeatured).toList();
+                // Chỉ hiển thị slider nổi bật khi đang ở tab 'Tất cả'.
+                final showFeatured = listState.selectedCategory == 'Tất cả';
+                final featured = showFeatured
+                    ? products.where((p) => p.isFeatured).toList()
+                    : const <Product>[];
                 return Column(
                   children: [
-                    FeaturedProductSlider(products: featured),
+                    if (showFeatured && featured.isNotEmpty)
+                      FeaturedProductSlider(products: featured),
                     Expanded(
                       child: GridView.builder(
                         padding: const EdgeInsets.symmetric(horizontal: 12),
