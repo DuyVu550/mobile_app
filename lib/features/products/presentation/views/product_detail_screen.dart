@@ -63,6 +63,60 @@ class ProductDetailScreen extends StatelessWidget {
                     product.description,
                     style: const TextStyle(fontSize: 16, height: 1.5),
                   ),
+                  if (product.specifications != null &&
+                      product.specifications!.isNotEmpty) ...[
+                    const Divider(height: 24),
+                    Text(
+                      'Thông số kỹ thuật',
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                    ),
+                    const SizedBox(height: 12),
+                    Table(
+                      border: TableBorder.all(
+                        color: Colors.grey[300]!,
+                        width: 1,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      columnWidths: const {
+                        0: FlexColumnWidth(2),
+                        1: FlexColumnWidth(3),
+                      },
+                      children: product.specifications!.entries.map((entry) {
+                        final isEven = product.specifications!.keys
+                                .toList()
+                                .indexOf(entry.key) %
+                            2 ==
+                            0;
+                        return TableRow(
+                          decoration: BoxDecoration(
+                            color: isEven ? Colors.grey[50] : Colors.white,
+                          ),
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 12, vertical: 10),
+                              child: Text(
+                                entry.key,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black54),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 12, vertical: 10),
+                              child: Text(
+                                entry.value,
+                                style: const TextStyle(color: Colors.black87),
+                              ),
+                            ),
+                          ],
+                        );
+                      }).toList(),
+                    ),
+                  ],
                 ],
               ),
             ),
