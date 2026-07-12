@@ -1,5 +1,5 @@
-import 'dart:io';
 import 'dart:developer' as developer;
+import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -17,20 +17,21 @@ class FileUploadService {
       receiveTimeout: const Duration(seconds: 30),
     ),
   );
-  final String _uploadUrl = "https://agent.api.eternalai.org/api/users/upload";
+  
+  // Using catbox.moe for reliable, free, keyless direct-link file hosting
+  final String _uploadUrl = "https://catbox.moe/user/api.php";
 
-  /// Tải tệp cục bộ lên server.
+  /// Tải tệp lên server bằng bytes dữ liệu.
   ///
   /// Trả về [Right] chứa URL kết quả (HTTPS) khi thành công,
   /// hoặc [Left] chứa thông điệp lỗi khi thất bại.
-  Future<Either<String, String>> uploadFile(File file) async {
+  Future<Either<String, String>> uploadFile(Uint8List bytes, String filename) async {
     try {
       final formData = FormData.fromMap({
-        "file": await MultipartFile.fromFile(
-          file.path,
-          // Dùng uri.pathSegments để lấy đúng tên file trên mọi nền tảng
-          // (split('/') sẽ hỏng với đường dẫn Windows dùng '\').
-          filename: file.uri.pathSegments.last,
+        "reqtype": "fileupload",
+        "fileToUpload": MultipartFile.fromBytes(
+          bytes,
+          filename: filename,
         ),
       });
 
@@ -39,10 +40,12 @@ class FileUploadService {
         data: formData,
       );
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        final url = _extractUrl(response.data);
-        if (url != null) return Right(url);
-        return const Left('Phản hồi từ server không chứa URL hợp lệ.');
+      if (response.statusCode == 200) {
+        final rawResponse = response.data;
+        if (rawResponse is String && rawResponse.startsWith("https://files.catbox.moe/")) {
+          return Right(rawResponse.trim());
+        }
+        return Left('Phản hồi không hợp lệ từ server: $rawResponse');
       }
       return Left('Upload thất bại với mã trạng thái ${response.statusCode}.');
     } on DioException catch (e) {
@@ -53,18 +56,5 @@ class FileUploadService {
       return Left('Lỗi không xác định khi upload: $e');
     }
   }
-
-  /// Trích xuất URL từ các dạng JSON phản hồi thông dụng.
-  String? _extractUrl(dynamic data) {
-    if (data is! Map) return null;
-
-    final direct = data['url'];
-    if (direct is String) return direct;
-
-    final nested = data['data'];
-    if (nested is Map && nested['url'] is String) {
-      return nested['url'] as String;
-    }
-    return null;
-  }
 }
+
