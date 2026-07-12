@@ -322,7 +322,8 @@ class ProfileScreen extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('Hồ sơ'),
         centerTitle: true,
-        backgroundColor: Colors.amberAccent,
+        backgroundColor: Colors.indigo,
+        foregroundColor: Colors.white,
       ),
       body: authState.when(
         data: (user) => user == null

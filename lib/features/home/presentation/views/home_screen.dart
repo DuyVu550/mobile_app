@@ -42,7 +42,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Đồ Điện Tử'),
+        title: const Text('Mobile Tech Store'),
+        backgroundColor: Colors.indigo,
+        foregroundColor: Colors.white,
+        elevation: 0,
         actions: [
           IconButton(
             icon: const Icon(Icons.person),

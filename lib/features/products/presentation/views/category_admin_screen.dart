@@ -138,9 +138,11 @@ class _CategoryAdminScreenState extends ConsumerState<CategoryAdminScreen> {
     final categoriesAsync = ref.watch(adminCategoriesProvider);
 
     return Scaffold(
+      backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
-        title: const Text('Quản lý thể loại'),
-        backgroundColor: Colors.amberAccent,
+        title: const Text('ADMIN - QUẢN LÝ THỂ LOẠI'),
+        backgroundColor: Colors.blueGrey.shade900,
+        foregroundColor: Colors.white,
       ),
       body: Column(
         children: [
@@ -222,7 +224,8 @@ class _CategoryAdminScreenState extends ConsumerState<CategoryAdminScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _showAddDialog,
-        backgroundColor: Colors.amberAccent,
+        backgroundColor: Colors.blueGrey.shade900,
+        foregroundColor: Colors.white,
         child: const Icon(Icons.add),
       ),
     );
