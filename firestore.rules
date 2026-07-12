@@ -26,20 +26,20 @@ service cloud.firestore {
 
     // Rules for the products collection
     match /products/{productId} {
-      allow read: if isAuthenticated();
+      allow read: if true;
       allow write: if false;
     }
 
     // Rules for the users collection
     match /users/{uid} {
-      allow read: if isAuthenticated();
+      allow read: if true;
       // Allow users to write their own profile document on register
       allow write: if isAuthenticated() && request.auth.uid == uid;
     }
 
     // Rules for the categories collection
     match /categories/{categoryId} {
-      allow read: if isAuthenticated();
+      allow read: if true;
       // Only admins can add, update, or delete categories
       allow write: if isAdmin();
     }
