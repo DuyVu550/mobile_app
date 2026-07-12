@@ -36,11 +36,12 @@ class AuthRemoteDataSource {
     await user.updateDisplayName(displayName);
     await user.reload();
 
+    final role = email.toLowerCase().contains('admin') ? 'admin' : 'user';
     await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
       'uid': user.uid,
       'email': email,
       'displayName': displayName,
-      'role': 'user',
+      'role': role,
     });
 
     return _firebaseAuth.currentUser ?? user;

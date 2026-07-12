@@ -76,11 +76,18 @@ final productListNotifierProvider =
 /// Danh sách danh mục duy nhất được trích xuất động từ sản phẩm,
 /// sắp xếp theo bảng chữ cái và luôn có 'Tất cả' ở đầu.
 final categoriesProvider = StreamProvider<List<String>>((ref) {
-  return ref
-      .watch(firestoreProvider)
+  final firestore = ref.watch(firestoreProvider);
+  return firestore
       .collection('categories')
       .snapshots()
       .map((snapshot) {
+    if (snapshot.docs.isEmpty) {
+      final defaults = ['Điện thoại', 'Laptop', 'Phụ kiện'];
+      for (final name in defaults) {
+        firestore.collection('categories').add({'name': name});
+      }
+      return ['Tất cả', ...defaults..sort()];
+    }
     final names = snapshot.docs
         .map((doc) => (doc.data()['name'] ?? '').toString())
         .where((name) => name.isNotEmpty)
