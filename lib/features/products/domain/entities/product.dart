@@ -8,6 +8,7 @@ class Product {
   final bool isFeatured;
   final double rating;
   final bool hasPromotion;
+  final Map<String, String>? specifications;
 
   const Product({
     required this.id,
@@ -19,5 +20,6 @@ class Product {
     required this.isFeatured,
     required this.rating,
     required this.hasPromotion,
+    this.specifications,
   });
 }

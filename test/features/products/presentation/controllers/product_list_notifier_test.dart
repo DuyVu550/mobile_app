@@ -19,6 +19,10 @@ class FakeProductRepository implements ProductRepository {
         isFeatured: false,
         rating: 4.8,
         hasPromotion: true,
+        specifications: {
+          'Màn hình': '6.7 inch Super Retina XDR',
+          'RAM': '8 GB',
+        },
       ),
       Product(
         id: 'p2',
@@ -30,6 +34,10 @@ class FakeProductRepository implements ProductRepository {
         isFeatured: false,
         rating: 4.5,
         hasPromotion: false,
+        specifications: {
+          'Vi xử lý': 'Apple M3',
+          'RAM': '16 GB',
+        },
       ),
     ]));
   }

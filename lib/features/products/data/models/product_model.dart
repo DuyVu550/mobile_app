@@ -16,6 +16,7 @@ class ProductModel with _$ProductModel implements Product {
     required bool isFeatured,
     required double rating,
     required bool hasPromotion,
+    Map<String, String>? specifications,
   }) = _ProductModel;
 
   const ProductModel._();
@@ -24,6 +25,13 @@ class ProductModel with _$ProductModel implements Product {
       _$ProductModelFromJson(json);
 
   factory ProductModel.fromFirestore(String id, Map<String, dynamic> data) {
+    Map<String, String>? specs;
+    if (data['specifications'] != null && data['specifications'] is Map) {
+      specs = (data['specifications'] as Map).map(
+        (key, value) => MapEntry(key.toString(), value.toString()),
+      );
+    }
+
     return ProductModel(
       id: id,
       name: (data['name'] ?? '') as String,
@@ -34,6 +42,7 @@ class ProductModel with _$ProductModel implements Product {
       isFeatured: (data['isFeatured'] ?? false) as bool,
       rating: ((data['rating'] ?? 0.0) as num).toDouble(),
       hasPromotion: (data['hasPromotion'] ?? false) as bool,
+      specifications: specs,
     );
   }
 
@@ -48,6 +57,7 @@ class ProductModel with _$ProductModel implements Product {
       isFeatured: isFeatured,
       rating: rating,
       hasPromotion: hasPromotion,
+      specifications: specifications,
     );
   }
 }

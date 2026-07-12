@@ -21,7 +21,7 @@ class ProductListNotifier extends StateNotifier<ProductListState> {
   final WatchProductsUseCase _watchProductsUseCase;
 
   ProductListNotifier(this._watchProductsUseCase)
-      : super(const ProductListState()) {
+    : super(const ProductListState()) {
     _init();
   }
 
@@ -29,7 +29,8 @@ class ProductListNotifier extends StateNotifier<ProductListState> {
     _watchProductsUseCase.execute().listen((result) {
       result.fold(
         (error) => state = state.copyWith(
-            products: AsyncValue.error(error, StackTrace.current)),
+          products: AsyncValue.error(error, StackTrace.current),
+        ),
         (list) => state = state.copyWith(products: AsyncValue.data(list)),
       );
     });
@@ -69,8 +70,8 @@ class ProductListNotifier extends StateNotifier<ProductListState> {
 
 final productListNotifierProvider =
     StateNotifierProvider<ProductListNotifier, ProductListState>((ref) {
-  return ProductListNotifier(ref.watch(watchProductsUseCaseProvider));
-});
+      return ProductListNotifier(ref.watch(watchProductsUseCaseProvider));
+    });
 
 /// Danh sách danh mục duy nhất được trích xuất động từ sản phẩm,
 /// sắp xếp theo bảng chữ cái và luôn có 'Tất cả' ở đầu.
@@ -98,8 +99,7 @@ final filteredProductsProvider = Provider<AsyncValue<List<Product>>>((ref) {
     // 1. Lọc theo danh mục nếu không phải 'Tất cả'
     var list = products;
     if (state.selectedCategory != 'Tất cả') {
-      list =
-          list.where((p) => p.category == state.selectedCategory).toList();
+      list = list.where((p) => p.category == state.selectedCategory).toList();
     }
 
     // 2. Lọc theo từ khóa tìm kiếm

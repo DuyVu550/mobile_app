@@ -30,6 +30,7 @@ mixin _$ProductModel {
   bool get isFeatured => throw _privateConstructorUsedError;
   double get rating => throw _privateConstructorUsedError;
   bool get hasPromotion => throw _privateConstructorUsedError;
+  Map<String, String>? get specifications => throw _privateConstructorUsedError;
 
   /// Serializes this ProductModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -58,6 +59,7 @@ abstract class $ProductModelCopyWith<$Res> {
     bool isFeatured,
     double rating,
     bool hasPromotion,
+    Map<String, String>? specifications,
   });
 }
 
@@ -85,6 +87,7 @@ class _$ProductModelCopyWithImpl<$Res, $Val extends ProductModel>
     Object? isFeatured = null,
     Object? rating = null,
     Object? hasPromotion = null,
+    Object? specifications = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -124,6 +127,10 @@ class _$ProductModelCopyWithImpl<$Res, $Val extends ProductModel>
                 ? _value.hasPromotion
                 : hasPromotion // ignore: cast_nullable_to_non_nullable
                       as bool,
+            specifications: freezed == specifications
+                ? _value.specifications
+                : specifications // ignore: cast_nullable_to_non_nullable
+                      as Map<String, String>?,
           )
           as $Val,
     );
@@ -149,6 +156,7 @@ abstract class _$$ProductModelImplCopyWith<$Res>
     bool isFeatured,
     double rating,
     bool hasPromotion,
+    Map<String, String>? specifications,
   });
 }
 
@@ -175,6 +183,7 @@ class __$$ProductModelImplCopyWithImpl<$Res>
     Object? isFeatured = null,
     Object? rating = null,
     Object? hasPromotion = null,
+    Object? specifications = freezed,
   }) {
     return _then(
       _$ProductModelImpl(
@@ -214,6 +223,10 @@ class __$$ProductModelImplCopyWithImpl<$Res>
             ? _value.hasPromotion
             : hasPromotion // ignore: cast_nullable_to_non_nullable
                   as bool,
+        specifications: freezed == specifications
+            ? _value._specifications
+            : specifications // ignore: cast_nullable_to_non_nullable
+                  as Map<String, String>?,
       ),
     );
   }
@@ -232,7 +245,9 @@ class _$ProductModelImpl extends _ProductModel {
     required this.isFeatured,
     required this.rating,
     required this.hasPromotion,
-  }) : super._();
+    final Map<String, String>? specifications,
+  }) : _specifications = specifications,
+       super._();
 
   factory _$ProductModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$ProductModelImplFromJson(json);
@@ -255,10 +270,19 @@ class _$ProductModelImpl extends _ProductModel {
   final double rating;
   @override
   final bool hasPromotion;
+  final Map<String, String>? _specifications;
+  @override
+  Map<String, String>? get specifications {
+    final value = _specifications;
+    if (value == null) return null;
+    if (_specifications is EqualUnmodifiableMapView) return _specifications;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(value);
+  }
 
   @override
   String toString() {
-    return 'ProductModel(id: $id, name: $name, description: $description, price: $price, imageUrl: $imageUrl, category: $category, isFeatured: $isFeatured, rating: $rating, hasPromotion: $hasPromotion)';
+    return 'ProductModel(id: $id, name: $name, description: $description, price: $price, imageUrl: $imageUrl, category: $category, isFeatured: $isFeatured, rating: $rating, hasPromotion: $hasPromotion, specifications: $specifications)';
   }
 
   @override
@@ -279,7 +303,11 @@ class _$ProductModelImpl extends _ProductModel {
                 other.isFeatured == isFeatured) &&
             (identical(other.rating, rating) || other.rating == rating) &&
             (identical(other.hasPromotion, hasPromotion) ||
-                other.hasPromotion == hasPromotion));
+                other.hasPromotion == hasPromotion) &&
+            const DeepCollectionEquality().equals(
+              other._specifications,
+              _specifications,
+            ));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -295,6 +323,7 @@ class _$ProductModelImpl extends _ProductModel {
     isFeatured,
     rating,
     hasPromotion,
+    const DeepCollectionEquality().hash(_specifications),
   );
 
   /// Create a copy of ProductModel
@@ -322,6 +351,7 @@ abstract class _ProductModel extends ProductModel {
     required final bool isFeatured,
     required final double rating,
     required final bool hasPromotion,
+    final Map<String, String>? specifications,
   }) = _$ProductModelImpl;
   const _ProductModel._() : super._();
 
@@ -346,6 +376,8 @@ abstract class _ProductModel extends ProductModel {
   double get rating;
   @override
   bool get hasPromotion;
+  @override
+  Map<String, String>? get specifications;
 
   /// Create a copy of ProductModel
   /// with the given fields replaced by the non-null parameter values.
