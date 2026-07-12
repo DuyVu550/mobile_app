@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/datasources/auth_remote_datasource.dart';
@@ -49,4 +50,16 @@ final updateProfileUseCaseProvider = Provider<UpdateProfileUseCase>((ref) {
 
 final authStateProvider = StreamProvider<AppUser?>((ref) {
   return ref.watch(authRepositoryProvider).authStateChanges();
+});
+
+/// Stream user profile document from Firestore to get the role (admin/user).
+final userProfileProvider = StreamProvider<Map<String, dynamic>?>((ref) {
+  final authState = ref.watch(authStateProvider);
+  final uid = authState.valueOrNull?.uid;
+  if (uid == null) return Stream.value(null);
+  return FirebaseFirestore.instance
+      .collection('users')
+      .doc(uid)
+      .snapshots()
+      .map((doc) => doc.data());
 });
