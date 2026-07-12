@@ -4,6 +4,7 @@ import '../../../auth/presentation/controllers/auth_action_controller.dart';
 import '../../../auth/presentation/views/profile_screen.dart';
 import '../../../products/presentation/controllers/product_list_notifier.dart';
 import '../../../products/presentation/views/widgets/product_card.dart';
+import '../../../products/presentation/views/widgets/featured_product_slider.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -113,19 +114,28 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     child: Text('Không tìm thấy sản phẩm nào.'),
                   );
                 }
-                return GridView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  gridDelegate:
-                      const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    childAspectRatio: 0.8,
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
-                  ),
-                  itemCount: products.length,
-                  itemBuilder: (context, index) {
-                    return ProductCard(product: products[index]);
-                  },
+                final featured =
+                    products.where((p) => p.isFeatured).toList();
+                return Column(
+                  children: [
+                    FeaturedProductSlider(products: featured),
+                    Expanded(
+                      child: GridView.builder(
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          childAspectRatio: 0.8,
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 10,
+                        ),
+                        itemCount: products.length,
+                        itemBuilder: (context, index) {
+                          return ProductCard(product: products[index]);
+                        },
+                      ),
+                    ),
+                  ],
                 );
               },
               loading: () => const Center(child: CircularProgressIndicator()),
