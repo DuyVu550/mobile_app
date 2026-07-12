@@ -20,6 +20,8 @@ class FakeProductRepository implements ProductRepository {
         imageUrl: 'iphone.png',
         category: 'Điện thoại',
         isFeatured: true,
+        rating: 4.8,
+        hasPromotion: true,
       ),
       Product(
         id: 'p2',
@@ -29,6 +31,8 @@ class FakeProductRepository implements ProductRepository {
         imageUrl: 'macbook.png',
         category: 'Laptop',
         isFeatured: false,
+        rating: 4.5,
+        hasPromotion: false,
       ),
     ]));
   }

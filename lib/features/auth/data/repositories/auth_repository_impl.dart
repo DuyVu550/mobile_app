@@ -13,6 +13,7 @@ class AuthRepositoryImpl implements AuthRepository {
         uid: user.uid,
         email: user.email ?? '',
         displayName: user.displayName,
+        photoUrl: user.photoURL,
         emailVerified: user.emailVerified,
       );
 
@@ -102,6 +103,24 @@ class AuthRepositoryImpl implements AuthRepository {
         newPassword: newPassword,
       );
       return const Right(unit);
+    } on FirebaseAuthException catch (e) {
+      return Left(_mapError(e));
+    } catch (e) {
+      return Left('Đã có lỗi xảy ra: $e');
+    }
+  }
+
+  @override
+  Future<Either<String, AppUser>> updateProfile({
+    required String displayName,
+    required String photoUrl,
+  }) async {
+    try {
+      final user = await _remoteDataSource.updateProfile(
+        displayName: displayName,
+        photoUrl: photoUrl,
+      );
+      return Right(_toEntity(user));
     } on FirebaseAuthException catch (e) {
       return Left(_mapError(e));
     } catch (e) {

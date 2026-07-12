@@ -41,6 +41,10 @@ final changePasswordUseCaseProvider = Provider<ChangePasswordUseCase>((ref) {
   return ChangePasswordUseCase(ref.watch(authRepositoryProvider));
 });
 
+final updateProfileUseCaseProvider = Provider<UpdateProfileUseCase>((ref) {
+  return UpdateProfileUseCase(ref.watch(authRepositoryProvider));
+});
+
 // --- State stream: nguồn sự thật cho AuthGate ---
 
 final authStateProvider = StreamProvider<AppUser?>((ref) {

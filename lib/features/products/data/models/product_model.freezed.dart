@@ -28,6 +28,8 @@ mixin _$ProductModel {
   String get imageUrl => throw _privateConstructorUsedError;
   String get category => throw _privateConstructorUsedError;
   bool get isFeatured => throw _privateConstructorUsedError;
+  double get rating => throw _privateConstructorUsedError;
+  bool get hasPromotion => throw _privateConstructorUsedError;
 
   /// Serializes this ProductModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -54,6 +56,8 @@ abstract class $ProductModelCopyWith<$Res> {
     String imageUrl,
     String category,
     bool isFeatured,
+    double rating,
+    bool hasPromotion,
   });
 }
 
@@ -79,6 +83,8 @@ class _$ProductModelCopyWithImpl<$Res, $Val extends ProductModel>
     Object? imageUrl = null,
     Object? category = null,
     Object? isFeatured = null,
+    Object? rating = null,
+    Object? hasPromotion = null,
   }) {
     return _then(
       _value.copyWith(
@@ -110,6 +116,14 @@ class _$ProductModelCopyWithImpl<$Res, $Val extends ProductModel>
                 ? _value.isFeatured
                 : isFeatured // ignore: cast_nullable_to_non_nullable
                       as bool,
+            rating: null == rating
+                ? _value.rating
+                : rating // ignore: cast_nullable_to_non_nullable
+                      as double,
+            hasPromotion: null == hasPromotion
+                ? _value.hasPromotion
+                : hasPromotion // ignore: cast_nullable_to_non_nullable
+                      as bool,
           )
           as $Val,
     );
@@ -133,6 +147,8 @@ abstract class _$$ProductModelImplCopyWith<$Res>
     String imageUrl,
     String category,
     bool isFeatured,
+    double rating,
+    bool hasPromotion,
   });
 }
 
@@ -157,6 +173,8 @@ class __$$ProductModelImplCopyWithImpl<$Res>
     Object? imageUrl = null,
     Object? category = null,
     Object? isFeatured = null,
+    Object? rating = null,
+    Object? hasPromotion = null,
   }) {
     return _then(
       _$ProductModelImpl(
@@ -188,6 +206,14 @@ class __$$ProductModelImplCopyWithImpl<$Res>
             ? _value.isFeatured
             : isFeatured // ignore: cast_nullable_to_non_nullable
                   as bool,
+        rating: null == rating
+            ? _value.rating
+            : rating // ignore: cast_nullable_to_non_nullable
+                  as double,
+        hasPromotion: null == hasPromotion
+            ? _value.hasPromotion
+            : hasPromotion // ignore: cast_nullable_to_non_nullable
+                  as bool,
       ),
     );
   }
@@ -204,6 +230,8 @@ class _$ProductModelImpl extends _ProductModel {
     required this.imageUrl,
     required this.category,
     required this.isFeatured,
+    required this.rating,
+    required this.hasPromotion,
   }) : super._();
 
   factory _$ProductModelImpl.fromJson(Map<String, dynamic> json) =>
@@ -223,10 +251,14 @@ class _$ProductModelImpl extends _ProductModel {
   final String category;
   @override
   final bool isFeatured;
+  @override
+  final double rating;
+  @override
+  final bool hasPromotion;
 
   @override
   String toString() {
-    return 'ProductModel(id: $id, name: $name, description: $description, price: $price, imageUrl: $imageUrl, category: $category, isFeatured: $isFeatured)';
+    return 'ProductModel(id: $id, name: $name, description: $description, price: $price, imageUrl: $imageUrl, category: $category, isFeatured: $isFeatured, rating: $rating, hasPromotion: $hasPromotion)';
   }
 
   @override
@@ -244,7 +276,10 @@ class _$ProductModelImpl extends _ProductModel {
             (identical(other.category, category) ||
                 other.category == category) &&
             (identical(other.isFeatured, isFeatured) ||
-                other.isFeatured == isFeatured));
+                other.isFeatured == isFeatured) &&
+            (identical(other.rating, rating) || other.rating == rating) &&
+            (identical(other.hasPromotion, hasPromotion) ||
+                other.hasPromotion == hasPromotion));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -258,6 +293,8 @@ class _$ProductModelImpl extends _ProductModel {
     imageUrl,
     category,
     isFeatured,
+    rating,
+    hasPromotion,
   );
 
   /// Create a copy of ProductModel
@@ -283,6 +320,8 @@ abstract class _ProductModel extends ProductModel {
     required final String imageUrl,
     required final String category,
     required final bool isFeatured,
+    required final double rating,
+    required final bool hasPromotion,
   }) = _$ProductModelImpl;
   const _ProductModel._() : super._();
 
@@ -303,6 +342,10 @@ abstract class _ProductModel extends ProductModel {
   String get category;
   @override
   bool get isFeatured;
+  @override
+  double get rating;
+  @override
+  bool get hasPromotion;
 
   /// Create a copy of ProductModel
   /// with the given fields replaced by the non-null parameter values.

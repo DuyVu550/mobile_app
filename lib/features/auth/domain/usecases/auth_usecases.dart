@@ -61,3 +61,18 @@ class ChangePasswordUseCase {
     );
   }
 }
+
+class UpdateProfileUseCase {
+  final AuthRepository _repository;
+  const UpdateProfileUseCase(this._repository);
+
+  Future<Either<String, AppUser>> execute({
+    required String displayName,
+    required String photoUrl,
+  }) {
+    return _repository.updateProfile(
+      displayName: displayName,
+      photoUrl: photoUrl,
+    );
+  }
+}

@@ -20,6 +20,10 @@ mixin _$ProductListState {
   String get searchQuery => throw _privateConstructorUsedError;
   String get selectedCategory => throw _privateConstructorUsedError;
   AsyncValue<List<Product>> get products => throw _privateConstructorUsedError;
+  double? get minPrice => throw _privateConstructorUsedError;
+  double? get maxPrice => throw _privateConstructorUsedError;
+  double? get minRating => throw _privateConstructorUsedError;
+  bool get onlyPromotions => throw _privateConstructorUsedError;
 
   /// Create a copy of ProductListState
   /// with the given fields replaced by the non-null parameter values.
@@ -39,6 +43,10 @@ abstract class $ProductListStateCopyWith<$Res> {
     String searchQuery,
     String selectedCategory,
     AsyncValue<List<Product>> products,
+    double? minPrice,
+    double? maxPrice,
+    double? minRating,
+    bool onlyPromotions,
   });
 }
 
@@ -60,6 +68,10 @@ class _$ProductListStateCopyWithImpl<$Res, $Val extends ProductListState>
     Object? searchQuery = null,
     Object? selectedCategory = null,
     Object? products = null,
+    Object? minPrice = freezed,
+    Object? maxPrice = freezed,
+    Object? minRating = freezed,
+    Object? onlyPromotions = null,
   }) {
     return _then(
       _value.copyWith(
@@ -75,6 +87,22 @@ class _$ProductListStateCopyWithImpl<$Res, $Val extends ProductListState>
                 ? _value.products
                 : products // ignore: cast_nullable_to_non_nullable
                       as AsyncValue<List<Product>>,
+            minPrice: freezed == minPrice
+                ? _value.minPrice
+                : minPrice // ignore: cast_nullable_to_non_nullable
+                      as double?,
+            maxPrice: freezed == maxPrice
+                ? _value.maxPrice
+                : maxPrice // ignore: cast_nullable_to_non_nullable
+                      as double?,
+            minRating: freezed == minRating
+                ? _value.minRating
+                : minRating // ignore: cast_nullable_to_non_nullable
+                      as double?,
+            onlyPromotions: null == onlyPromotions
+                ? _value.onlyPromotions
+                : onlyPromotions // ignore: cast_nullable_to_non_nullable
+                      as bool,
           )
           as $Val,
     );
@@ -94,6 +122,10 @@ abstract class _$$ProductListStateImplCopyWith<$Res>
     String searchQuery,
     String selectedCategory,
     AsyncValue<List<Product>> products,
+    double? minPrice,
+    double? maxPrice,
+    double? minRating,
+    bool onlyPromotions,
   });
 }
 
@@ -114,6 +146,10 @@ class __$$ProductListStateImplCopyWithImpl<$Res>
     Object? searchQuery = null,
     Object? selectedCategory = null,
     Object? products = null,
+    Object? minPrice = freezed,
+    Object? maxPrice = freezed,
+    Object? minRating = freezed,
+    Object? onlyPromotions = null,
   }) {
     return _then(
       _$ProductListStateImpl(
@@ -129,6 +165,22 @@ class __$$ProductListStateImplCopyWithImpl<$Res>
             ? _value.products
             : products // ignore: cast_nullable_to_non_nullable
                   as AsyncValue<List<Product>>,
+        minPrice: freezed == minPrice
+            ? _value.minPrice
+            : minPrice // ignore: cast_nullable_to_non_nullable
+                  as double?,
+        maxPrice: freezed == maxPrice
+            ? _value.maxPrice
+            : maxPrice // ignore: cast_nullable_to_non_nullable
+                  as double?,
+        minRating: freezed == minRating
+            ? _value.minRating
+            : minRating // ignore: cast_nullable_to_non_nullable
+                  as double?,
+        onlyPromotions: null == onlyPromotions
+            ? _value.onlyPromotions
+            : onlyPromotions // ignore: cast_nullable_to_non_nullable
+                  as bool,
       ),
     );
   }
@@ -141,6 +193,10 @@ class _$ProductListStateImpl implements _ProductListState {
     this.searchQuery = '',
     this.selectedCategory = 'Tất cả',
     this.products = const AsyncValue.loading(),
+    this.minPrice,
+    this.maxPrice,
+    this.minRating,
+    this.onlyPromotions = false,
   });
 
   @override
@@ -152,10 +208,19 @@ class _$ProductListStateImpl implements _ProductListState {
   @override
   @JsonKey()
   final AsyncValue<List<Product>> products;
+  @override
+  final double? minPrice;
+  @override
+  final double? maxPrice;
+  @override
+  final double? minRating;
+  @override
+  @JsonKey()
+  final bool onlyPromotions;
 
   @override
   String toString() {
-    return 'ProductListState(searchQuery: $searchQuery, selectedCategory: $selectedCategory, products: $products)';
+    return 'ProductListState(searchQuery: $searchQuery, selectedCategory: $selectedCategory, products: $products, minPrice: $minPrice, maxPrice: $maxPrice, minRating: $minRating, onlyPromotions: $onlyPromotions)';
   }
 
   @override
@@ -168,12 +233,28 @@ class _$ProductListStateImpl implements _ProductListState {
             (identical(other.selectedCategory, selectedCategory) ||
                 other.selectedCategory == selectedCategory) &&
             (identical(other.products, products) ||
-                other.products == products));
+                other.products == products) &&
+            (identical(other.minPrice, minPrice) ||
+                other.minPrice == minPrice) &&
+            (identical(other.maxPrice, maxPrice) ||
+                other.maxPrice == maxPrice) &&
+            (identical(other.minRating, minRating) ||
+                other.minRating == minRating) &&
+            (identical(other.onlyPromotions, onlyPromotions) ||
+                other.onlyPromotions == onlyPromotions));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, searchQuery, selectedCategory, products);
+  int get hashCode => Object.hash(
+    runtimeType,
+    searchQuery,
+    selectedCategory,
+    products,
+    minPrice,
+    maxPrice,
+    minRating,
+    onlyPromotions,
+  );
 
   /// Create a copy of ProductListState
   /// with the given fields replaced by the non-null parameter values.
@@ -192,6 +273,10 @@ abstract class _ProductListState implements ProductListState {
     final String searchQuery,
     final String selectedCategory,
     final AsyncValue<List<Product>> products,
+    final double? minPrice,
+    final double? maxPrice,
+    final double? minRating,
+    final bool onlyPromotions,
   }) = _$ProductListStateImpl;
 
   @override
@@ -200,6 +285,14 @@ abstract class _ProductListState implements ProductListState {
   String get selectedCategory;
   @override
   AsyncValue<List<Product>> get products;
+  @override
+  double? get minPrice;
+  @override
+  double? get maxPrice;
+  @override
+  double? get minRating;
+  @override
+  bool get onlyPromotions;
 
   /// Create a copy of ProductListState
   /// with the given fields replaced by the non-null parameter values.

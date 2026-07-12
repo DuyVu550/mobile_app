@@ -42,6 +42,13 @@ class ThrowingAuthDataSource implements AuthRemoteDataSource {
     required String newPassword,
   }) async =>
       throw _error();
+
+  @override
+  Future<User> updateProfile({
+    required String displayName,
+    required String photoUrl,
+  }) async =>
+      throw _error();
 }
 
 void main() {

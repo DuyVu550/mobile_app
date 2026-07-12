@@ -13,6 +13,8 @@ void main() {
       imageUrl: 'iphone15.png',
       category: 'Điện thoại',
       isFeatured: true,
+      rating: 4.8,
+      hasPromotion: true,
     );
 
     await tester.pumpWidget(

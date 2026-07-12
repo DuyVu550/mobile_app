@@ -8,7 +8,7 @@ void main() {
   testWidgets(
       'FeaturedProductSlider renders products and detail page navigation',
       (tester) async {
-    final products = [
+    final List<Product> products = [
       const Product(
         id: 'p1',
         name: 'iPhone 15',
@@ -17,6 +17,8 @@ void main() {
         imageUrl: 'iphone15.png',
         category: 'Điện thoại',
         isFeatured: true,
+        rating: 4.5,
+        hasPromotion: false,
       ),
       const Product(
         id: 'p2',
@@ -26,6 +28,8 @@ void main() {
         imageUrl: 'macbook.png',
         category: 'Laptop',
         isFeatured: true,
+        rating: 4.7,
+        hasPromotion: true,
       ),
     ];
 

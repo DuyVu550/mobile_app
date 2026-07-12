@@ -10,5 +10,9 @@ class ProductListState with _$ProductListState {
     @Default('') String searchQuery,
     @Default('Tất cả') String selectedCategory,
     @Default(AsyncValue.loading()) AsyncValue<List<Product>> products,
+    double? minPrice,
+    double? maxPrice,
+    double? minRating,
+    @Default(false) bool onlyPromotions,
   }) = _ProductListState;
 }

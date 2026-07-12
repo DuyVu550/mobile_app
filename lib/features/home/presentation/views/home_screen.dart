@@ -6,6 +6,7 @@ import '../../../products/presentation/controllers/product_list_notifier.dart';
 import '../../../products/domain/entities/product.dart';
 import '../../../products/presentation/views/widgets/product_card.dart';
 import '../../../products/presentation/views/widgets/featured_product_slider.dart';
+import '../../../products/presentation/views/widgets/product_filter_bottom_sheet.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -80,33 +81,58 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         children: [
           Padding(
             padding: const EdgeInsets.all(12.0),
-            child: TextField(
-              controller: _searchController,
-              onChanged: (val) {
-                ref
-                    .read(productListNotifierProvider.notifier)
-                    .updateSearchQuery(val);
-              },
-              decoration: InputDecoration(
-                hintText: 'Tìm kiếm sản phẩm...',
-                prefixIcon: const Icon(Icons.search),
-                suffixIcon: searchVal.isNotEmpty
-                    ? IconButton(
-                        icon: const Icon(Icons.clear),
-                        onPressed: () {
-                          _searchController.clear();
-                          ref
-                              .read(productListNotifierProvider.notifier)
-                              .updateSearchQuery('');
-                        },
-                      )
-                    : null,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _searchController,
+                    onChanged: (val) {
+                      ref
+                          .read(productListNotifierProvider.notifier)
+                          .updateSearchQuery(val);
+                    },
+                    decoration: InputDecoration(
+                      hintText: 'Tìm kiếm sản phẩm...',
+                      prefixIcon: const Icon(Icons.search),
+                      suffixIcon: searchVal.isNotEmpty
+                          ? IconButton(
+                              icon: const Icon(Icons.clear),
+                              onPressed: () {
+                                _searchController.clear();
+                                ref
+                                    .read(productListNotifierProvider.notifier)
+                                    .updateSearchQuery('');
+                              },
+                            )
+                          : null,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      contentPadding:
+                          const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
+                    ),
+                  ),
                 ),
-                contentPadding:
-                    const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
-              ),
+                const SizedBox(width: 8),
+                IconButton(
+                  icon: Icon(
+                    Icons.filter_list,
+                    color: (listState.minPrice != null ||
+                            listState.maxPrice != null ||
+                            listState.minRating != null ||
+                            listState.onlyPromotions)
+                        ? Theme.of(context).primaryColor
+                        : null,
+                  ),
+                  onPressed: () {
+                    showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      builder: (_) => const ProductFilterBottomSheet(),
+                    );
+                  },
+                ),
+              ],
             ),
           ),
           // Thanh danh mục cuộn ngang.

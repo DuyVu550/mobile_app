@@ -14,6 +14,8 @@ class ProductModel with _$ProductModel implements Product {
     required String imageUrl,
     required String category,
     required bool isFeatured,
+    required double rating,
+    required bool hasPromotion,
   }) = _ProductModel;
 
   const ProductModel._();
@@ -30,6 +32,8 @@ class ProductModel with _$ProductModel implements Product {
       imageUrl: (data['imageUrl'] ?? '') as String,
       category: (data['category'] ?? '') as String,
       isFeatured: (data['isFeatured'] ?? false) as bool,
+      rating: ((data['rating'] ?? 0.0) as num).toDouble(),
+      hasPromotion: (data['hasPromotion'] ?? false) as bool,
     );
   }
 
@@ -42,6 +46,8 @@ class ProductModel with _$ProductModel implements Product {
       imageUrl: imageUrl,
       category: category,
       isFeatured: isFeatured,
+      rating: rating,
+      hasPromotion: hasPromotion,
     );
   }
 }

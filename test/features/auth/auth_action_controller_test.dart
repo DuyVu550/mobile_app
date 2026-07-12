@@ -15,6 +15,8 @@ class FakeAuthRepository implements AuthRepository {
   Either<String, Unit> signOutResult = const Right(unit);
   Either<String, Unit> resetResult = const Right(unit);
   Either<String, Unit> changePasswordResult = const Right(unit);
+  Either<String, AppUser> updateProfileResult =
+      const Right(AppUser(uid: 'u1', email: 'a@b.com'));
 
   @override
   Stream<AppUser?> authStateChanges() => const Stream.empty();
@@ -52,6 +54,13 @@ class FakeAuthRepository implements AuthRepository {
     required String newPassword,
   }) async =>
       changePasswordResult;
+
+  @override
+  Future<Either<String, AppUser>> updateProfile({
+    required String displayName,
+    required String photoUrl,
+  }) async =>
+      updateProfileResult;
 }
 
 void main() {

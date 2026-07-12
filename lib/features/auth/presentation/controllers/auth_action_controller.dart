@@ -53,6 +53,16 @@ class AuthActionController extends AutoDisposeNotifier<AuthActionState> {
         ));
   }
 
+  Future<bool> updateProfile({
+    required String displayName,
+    required String photoUrl,
+  }) {
+    return _run(() => ref.read(updateProfileUseCaseProvider).execute(
+          displayName: displayName,
+          photoUrl: photoUrl,
+        ));
+  }
+
   Future<bool> signOut() {
     return _run(() => ref.read(signOutUseCaseProvider).execute());
   }

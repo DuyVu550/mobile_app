@@ -42,6 +42,29 @@ class ProductListNotifier extends StateNotifier<ProductListState> {
   void selectCategory(String category) {
     state = state.copyWith(selectedCategory: category);
   }
+
+  void applyFilters({
+    double? minPrice,
+    double? maxPrice,
+    double? minRating,
+    required bool onlyPromotions,
+  }) {
+    state = state.copyWith(
+      minPrice: minPrice,
+      maxPrice: maxPrice,
+      minRating: minRating,
+      onlyPromotions: onlyPromotions,
+    );
+  }
+
+  void clearFilters() {
+    state = state.copyWith(
+      minPrice: null,
+      maxPrice: null,
+      minRating: null,
+      onlyPromotions: false,
+    );
+  }
 }
 
 final productListNotifierProvider =
@@ -72,21 +95,41 @@ final categoriesProvider = Provider<List<String>>((ref) {
 final filteredProductsProvider = Provider<AsyncValue<List<Product>>>((ref) {
   final state = ref.watch(productListNotifierProvider);
   return state.products.whenData((products) {
-    // 1. Lọc theo danh mục nếu không phải 'Tất cả'.
+    // 1. Lọc theo danh mục nếu không phải 'Tất cả'
     var list = products;
     if (state.selectedCategory != 'Tất cả') {
       list =
           list.where((p) => p.category == state.selectedCategory).toList();
     }
 
-    // 2. Lọc theo từ khóa tìm kiếm.
-    if (state.searchQuery.trim().isEmpty) return list;
+    // 2. Lọc theo từ khóa tìm kiếm
+    if (state.searchQuery.trim().isNotEmpty) {
+      final query = removeDiacritics(state.searchQuery.trim());
+      list = list.where((product) {
+        final name = removeDiacritics(product.name);
+        final description = removeDiacritics(product.description);
+        return name.contains(query) || description.contains(query);
+      }).toList();
+    }
 
-    final query = removeDiacritics(state.searchQuery.trim());
-    return list.where((product) {
-      final name = removeDiacritics(product.name);
-      final description = removeDiacritics(product.description);
-      return name.contains(query) || description.contains(query);
-    }).toList();
+    // 3. Lọc theo khoảng giá
+    if (state.minPrice != null) {
+      list = list.where((p) => p.price >= state.minPrice!).toList();
+    }
+    if (state.maxPrice != null) {
+      list = list.where((p) => p.price <= state.maxPrice!).toList();
+    }
+
+    // 4. Lọc theo xếp hạng tối thiểu
+    if (state.minRating != null) {
+      list = list.where((p) => p.rating >= state.minRating!).toList();
+    }
+
+    // 5. Lọc theo chương trình khuyến mại
+    if (state.onlyPromotions) {
+      list = list.where((p) => p.hasPromotion).toList();
+    }
+
+    return list;
   });
 });

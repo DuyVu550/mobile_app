@@ -62,4 +62,21 @@ class AuthRemoteDataSource {
     await user.reauthenticateWithCredential(credential);
     await user.updatePassword(newPassword);
   }
+
+  Future<User> updateProfile({
+    required String displayName,
+    required String photoUrl,
+  }) async {
+    final user = _firebaseAuth.currentUser;
+    if (user == null) {
+      throw FirebaseAuthException(
+        code: 'no-current-user',
+        message: 'Chưa đăng nhập.',
+      );
+    }
+    await user.updateDisplayName(displayName);
+    await user.updatePhotoURL(photoUrl.trim().isEmpty ? null : photoUrl);
+    await user.reload();
+    return _firebaseAuth.currentUser ?? user;
+  }
 }

@@ -17,6 +17,8 @@ class FakeProductRepository implements ProductRepository {
         imageUrl: 'iphone.png',
         category: 'Điện thoại',
         isFeatured: false,
+        rating: 4.8,
+        hasPromotion: true,
       ),
       Product(
         id: 'p2',
@@ -26,6 +28,8 @@ class FakeProductRepository implements ProductRepository {
         imageUrl: 'macbook.png',
         category: 'Laptop',
         isFeatured: false,
+        rating: 4.5,
+        hasPromotion: false,
       ),
     ]));
   }
@@ -126,5 +130,53 @@ void main() {
         .updateSearchQuery('iphone');
     filtered = container.read(filteredProductsProvider).value;
     expect(filtered?.length, 0);
+  });
+
+  test('ProductListNotifier filters products by price range, rating, and promotions',
+      () async {
+    final container = ProviderContainer(
+      overrides: [
+        productRepositoryProvider.overrideWithValue(FakeProductRepository()),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    await container
+        .read(productListNotifierProvider.notifier)
+        .stream
+        .firstWhere((s) => s.products.hasValue);
+
+    // Initial check
+    var filtered = container.read(filteredProductsProvider).value;
+    expect(filtered?.length, 2);
+
+    // 1. Filter by price range
+    container
+        .read(productListNotifierProvider.notifier)
+        .applyFilters(minPrice: 30000000.0, onlyPromotions: false);
+    filtered = container.read(filteredProductsProvider).value;
+    expect(filtered?.length, 1);
+    expect(filtered?.first.name, 'Laptop MacBook');
+
+    // 2. Filter by promotion
+    container
+        .read(productListNotifierProvider.notifier)
+        .applyFilters(onlyPromotions: true);
+    filtered = container.read(filteredProductsProvider).value;
+    expect(filtered?.length, 1);
+    expect(filtered?.first.name, 'Điện thoại iPhone');
+
+    // 3. Filter by rating
+    container
+        .read(productListNotifierProvider.notifier)
+        .applyFilters(minRating: 4.6, onlyPromotions: false);
+    filtered = container.read(filteredProductsProvider).value;
+    expect(filtered?.length, 1);
+    expect(filtered?.first.name, 'Điện thoại iPhone');
+
+    // 4. Reset filters
+    container.read(productListNotifierProvider.notifier).clearFilters();
+    filtered = container.read(filteredProductsProvider).value;
+    expect(filtered?.length, 2);
   });
 }

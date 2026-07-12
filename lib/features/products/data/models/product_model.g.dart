@@ -15,6 +15,8 @@ _$ProductModelImpl _$$ProductModelImplFromJson(Map<String, dynamic> json) =>
       imageUrl: json['imageUrl'] as String,
       category: json['category'] as String,
       isFeatured: json['isFeatured'] as bool,
+      rating: (json['rating'] as num).toDouble(),
+      hasPromotion: json['hasPromotion'] as bool,
     );
 
 Map<String, dynamic> _$$ProductModelImplToJson(_$ProductModelImpl instance) =>
@@ -26,4 +28,6 @@ Map<String, dynamic> _$$ProductModelImplToJson(_$ProductModelImpl instance) =>
       'imageUrl': instance.imageUrl,
       'category': instance.category,
       'isFeatured': instance.isFeatured,
+      'rating': instance.rating,
+      'hasPromotion': instance.hasPromotion,
     };
