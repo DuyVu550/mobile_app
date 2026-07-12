@@ -38,6 +38,10 @@ class ProductListNotifier extends StateNotifier<ProductListState> {
   void updateSearchQuery(String query) {
     state = state.copyWith(searchQuery: query);
   }
+
+  void selectCategory(String category) {
+    state = state.copyWith(selectedCategory: category);
+  }
 }
 
 final productListNotifierProvider =
@@ -45,15 +49,41 @@ final productListNotifierProvider =
   return ProductListNotifier(ref.watch(watchProductsUseCaseProvider));
 });
 
-/// Danh sách sản phẩm đã lọc theo từ khóa tìm kiếm.
+/// Danh sách danh mục duy nhất được trích xuất động từ sản phẩm,
+/// sắp xếp theo bảng chữ cái và luôn có 'Tất cả' ở đầu.
+final categoriesProvider = Provider<List<String>>((ref) {
+  final state = ref.watch(productListNotifierProvider);
+  return state.products.maybeWhen(
+    data: (products) {
+      final uniqueCategories = products
+          .map((p) => p.category)
+          .where((c) => c.isNotEmpty)
+          .toSet()
+          .toList();
+      uniqueCategories.sort();
+      return ['Tất cả', ...uniqueCategories];
+    },
+    orElse: () => ['Tất cả'],
+  );
+});
+
+/// Danh sách sản phẩm đã lọc theo danh mục và từ khóa tìm kiếm.
 /// Khớp không phân biệt hoa/thường và không phân biệt dấu tiếng Việt.
 final filteredProductsProvider = Provider<AsyncValue<List<Product>>>((ref) {
   final state = ref.watch(productListNotifierProvider);
   return state.products.whenData((products) {
-    if (state.searchQuery.trim().isEmpty) return products;
+    // 1. Lọc theo danh mục nếu không phải 'Tất cả'.
+    var list = products;
+    if (state.selectedCategory != 'Tất cả') {
+      list =
+          list.where((p) => p.category == state.selectedCategory).toList();
+    }
+
+    // 2. Lọc theo từ khóa tìm kiếm.
+    if (state.searchQuery.trim().isEmpty) return list;
 
     final query = removeDiacritics(state.searchQuery.trim());
-    return products.where((product) {
+    return list.where((product) {
       final name = removeDiacritics(product.name);
       final description = removeDiacritics(product.description);
       return name.contains(query) || description.contains(query);

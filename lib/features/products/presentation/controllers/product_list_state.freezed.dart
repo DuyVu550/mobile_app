@@ -18,6 +18,7 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$ProductListState {
   String get searchQuery => throw _privateConstructorUsedError;
+  String get selectedCategory => throw _privateConstructorUsedError;
   AsyncValue<List<Product>> get products => throw _privateConstructorUsedError;
 
   /// Create a copy of ProductListState
@@ -34,7 +35,11 @@ abstract class $ProductListStateCopyWith<$Res> {
     $Res Function(ProductListState) then,
   ) = _$ProductListStateCopyWithImpl<$Res, ProductListState>;
   @useResult
-  $Res call({String searchQuery, AsyncValue<List<Product>> products});
+  $Res call({
+    String searchQuery,
+    String selectedCategory,
+    AsyncValue<List<Product>> products,
+  });
 }
 
 /// @nodoc
@@ -51,12 +56,20 @@ class _$ProductListStateCopyWithImpl<$Res, $Val extends ProductListState>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? searchQuery = null, Object? products = null}) {
+  $Res call({
+    Object? searchQuery = null,
+    Object? selectedCategory = null,
+    Object? products = null,
+  }) {
     return _then(
       _value.copyWith(
             searchQuery: null == searchQuery
                 ? _value.searchQuery
                 : searchQuery // ignore: cast_nullable_to_non_nullable
+                      as String,
+            selectedCategory: null == selectedCategory
+                ? _value.selectedCategory
+                : selectedCategory // ignore: cast_nullable_to_non_nullable
                       as String,
             products: null == products
                 ? _value.products
@@ -77,7 +90,11 @@ abstract class _$$ProductListStateImplCopyWith<$Res>
   ) = __$$ProductListStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String searchQuery, AsyncValue<List<Product>> products});
+  $Res call({
+    String searchQuery,
+    String selectedCategory,
+    AsyncValue<List<Product>> products,
+  });
 }
 
 /// @nodoc
@@ -93,12 +110,20 @@ class __$$ProductListStateImplCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? searchQuery = null, Object? products = null}) {
+  $Res call({
+    Object? searchQuery = null,
+    Object? selectedCategory = null,
+    Object? products = null,
+  }) {
     return _then(
       _$ProductListStateImpl(
         searchQuery: null == searchQuery
             ? _value.searchQuery
             : searchQuery // ignore: cast_nullable_to_non_nullable
+                  as String,
+        selectedCategory: null == selectedCategory
+            ? _value.selectedCategory
+            : selectedCategory // ignore: cast_nullable_to_non_nullable
                   as String,
         products: null == products
             ? _value.products
@@ -114,6 +139,7 @@ class __$$ProductListStateImplCopyWithImpl<$Res>
 class _$ProductListStateImpl implements _ProductListState {
   const _$ProductListStateImpl({
     this.searchQuery = '',
+    this.selectedCategory = 'Tất cả',
     this.products = const AsyncValue.loading(),
   });
 
@@ -122,11 +148,14 @@ class _$ProductListStateImpl implements _ProductListState {
   final String searchQuery;
   @override
   @JsonKey()
+  final String selectedCategory;
+  @override
+  @JsonKey()
   final AsyncValue<List<Product>> products;
 
   @override
   String toString() {
-    return 'ProductListState(searchQuery: $searchQuery, products: $products)';
+    return 'ProductListState(searchQuery: $searchQuery, selectedCategory: $selectedCategory, products: $products)';
   }
 
   @override
@@ -136,12 +165,15 @@ class _$ProductListStateImpl implements _ProductListState {
             other is _$ProductListStateImpl &&
             (identical(other.searchQuery, searchQuery) ||
                 other.searchQuery == searchQuery) &&
+            (identical(other.selectedCategory, selectedCategory) ||
+                other.selectedCategory == selectedCategory) &&
             (identical(other.products, products) ||
                 other.products == products));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, searchQuery, products);
+  int get hashCode =>
+      Object.hash(runtimeType, searchQuery, selectedCategory, products);
 
   /// Create a copy of ProductListState
   /// with the given fields replaced by the non-null parameter values.
@@ -158,11 +190,14 @@ class _$ProductListStateImpl implements _ProductListState {
 abstract class _ProductListState implements ProductListState {
   const factory _ProductListState({
     final String searchQuery,
+    final String selectedCategory,
     final AsyncValue<List<Product>> products,
   }) = _$ProductListStateImpl;
 
   @override
   String get searchQuery;
+  @override
+  String get selectedCategory;
   @override
   AsyncValue<List<Product>> get products;
 

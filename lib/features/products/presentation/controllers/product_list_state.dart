@@ -8,6 +8,7 @@ part 'product_list_state.freezed.dart';
 class ProductListState with _$ProductListState {
   const factory ProductListState({
     @Default('') String searchQuery,
+    @Default('Tất cả') String selectedCategory,
     @Default(AsyncValue.loading()) AsyncValue<List<Product>> products,
   }) = _ProductListState;
 }

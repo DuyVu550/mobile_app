@@ -66,4 +66,65 @@ void main() {
     expect(filtered2?.length, 1);
     expect(filtered2?.first.name, 'Điện thoại iPhone');
   });
+
+  test('categoriesProvider extracts unique sorted categories with "Tất cả"',
+      () async {
+    final container = ProviderContainer(
+      overrides: [
+        productRepositoryProvider.overrideWithValue(FakeProductRepository()),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    await container
+        .read(productListNotifierProvider.notifier)
+        .stream
+        .firstWhere((s) => s.products.hasValue);
+
+    final categories = container.read(categoriesProvider);
+    expect(categories, ['Tất cả', 'Laptop', 'Điện thoại']); // Alphabetically sorted
+  });
+
+  test('ProductListNotifier filters products by category and searchQuery',
+      () async {
+    final container = ProviderContainer(
+      overrides: [
+        productRepositoryProvider.overrideWithValue(FakeProductRepository()),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    await container
+        .read(productListNotifierProvider.notifier)
+        .stream
+        .firstWhere((s) => s.products.hasValue);
+
+    // Initial state
+    expect(
+        container.read(productListNotifierProvider).selectedCategory, 'Tất cả');
+
+    // Select category 'Laptop'
+    container
+        .read(productListNotifierProvider.notifier)
+        .selectCategory('Laptop');
+    expect(
+        container.read(productListNotifierProvider).selectedCategory, 'Laptop');
+    var filtered = container.read(filteredProductsProvider).value;
+    expect(filtered?.length, 1);
+    expect(filtered?.first.name, 'Laptop MacBook');
+
+    // Combine category with search query 'macbook'
+    container
+        .read(productListNotifierProvider.notifier)
+        .updateSearchQuery('macbook');
+    filtered = container.read(filteredProductsProvider).value;
+    expect(filtered?.length, 1);
+
+    // Combine category 'Laptop' with search query 'iphone' -> should return 0 items
+    container
+        .read(productListNotifierProvider.notifier)
+        .updateSearchQuery('iphone');
+    filtered = container.read(filteredProductsProvider).value;
+    expect(filtered?.length, 0);
+  });
 }
