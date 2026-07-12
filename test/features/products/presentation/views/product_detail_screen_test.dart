@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:toy_app/features/products/domain/entities/product.dart';
+import 'package:toy_app/features/products/presentation/controllers/review_providers.dart';
 import 'package:toy_app/features/products/presentation/views/product_detail_screen.dart';
+
+List<Override> _noReviews() => [
+      reviewsProvider.overrideWith((ref, _) => Stream.value([])),
+    ];
 
 void main() {
   testWidgets('ProductDetailScreen renders product details', (tester) async {
@@ -18,10 +24,14 @@ void main() {
     );
 
     await tester.pumpWidget(
-      const MaterialApp(
-        home: ProductDetailScreen(product: product),
+      ProviderScope(
+        overrides: _noReviews(),
+        child: const MaterialApp(
+          home: ProductDetailScreen(product: product),
+        ),
       ),
     );
+    await tester.pump();
 
     // Tên hiển thị cả ở AppBar và trong nội dung.
     expect(find.text('iPhone 15 Pro'), findsWidgets);
@@ -30,7 +40,9 @@ void main() {
     expect(find.text('Điện thoại cao cấp của Apple'), findsOneWidget);
   });
 
-  testWidgets('ProductDetailScreen renders specifications table when specifications are present', (tester) async {
+  testWidgets(
+      'ProductDetailScreen renders specifications table when specifications are present',
+      (tester) async {
     const product = Product(
       id: 'p1',
       name: 'iPhone 15 Pro',
@@ -48,10 +60,14 @@ void main() {
     );
 
     await tester.pumpWidget(
-      const MaterialApp(
-        home: ProductDetailScreen(product: product),
+      ProviderScope(
+        overrides: _noReviews(),
+        child: const MaterialApp(
+          home: ProductDetailScreen(product: product),
+        ),
       ),
     );
+    await tester.pump();
 
     expect(find.text('Thông số kỹ thuật'), findsOneWidget);
     expect(find.text('RAM'), findsOneWidget);
@@ -60,7 +76,9 @@ void main() {
     expect(find.text('128 GB'), findsOneWidget);
   });
 
-  testWidgets('ProductDetailScreen does not render specifications table when specifications are empty or null', (tester) async {
+  testWidgets(
+      'ProductDetailScreen does not render specifications table when specifications are empty or null',
+      (tester) async {
     const product = Product(
       id: 'p1',
       name: 'iPhone 15 Pro',
@@ -75,10 +93,14 @@ void main() {
     );
 
     await tester.pumpWidget(
-      const MaterialApp(
-        home: ProductDetailScreen(product: product),
+      ProviderScope(
+        overrides: _noReviews(),
+        child: const MaterialApp(
+          home: ProductDetailScreen(product: product),
+        ),
       ),
     );
+    await tester.pump();
 
     expect(find.text('Thông số kỹ thuật'), findsNothing);
   });

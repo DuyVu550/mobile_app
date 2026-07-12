@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:toy_app/features/products/domain/entities/product.dart';
-import 'package:toy_app/features/products/presentation/views/widgets/featured_product_slider.dart';
+import 'package:toy_app/features/products/presentation/controllers/review_providers.dart';
 import 'package:toy_app/features/products/presentation/views/product_detail_screen.dart';
+import 'package:toy_app/features/products/presentation/views/widgets/featured_product_slider.dart';
 
 void main() {
   testWidgets(
@@ -34,22 +36,25 @@ void main() {
     ];
 
     await tester.pumpWidget(
-      MaterialApp(
-        home: Scaffold(
-          body: FeaturedProductSlider(products: products),
+      ProviderScope(
+        overrides: [
+          reviewsProvider.overrideWith((ref, _) => Stream.value([])),
+        ],
+        child: MaterialApp(
+          home: Scaffold(
+            body: FeaturedProductSlider(products: products),
+          ),
         ),
       ),
     );
 
-    // Verify slides rendering
     expect(find.text('iPhone 15'), findsOneWidget);
     expect(find.text('20000000đ'), findsOneWidget);
 
-    // Tap on the slider to check navigation
     await tester.tap(find.text('iPhone 15'));
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 300)); // Complete route transition animation
 
-    // Check if navigated to ProductDetailScreen
     expect(find.byType(ProductDetailScreen), findsOneWidget);
   });
 }

@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/product.dart';
+import 'widgets/rating_section.dart';
 
-class ProductDetailScreen extends StatelessWidget {
+class ProductDetailScreen extends ConsumerWidget {
   final Product product;
   const ProductDetailScreen({super.key, required this.product});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
         title: Text(product.name),
@@ -117,6 +119,7 @@ class ProductDetailScreen extends StatelessWidget {
                       }).toList(),
                     ),
                   ],
+                  RatingSection(productId: product.id),
                 ],
               ),
             ),
