@@ -10,11 +10,12 @@ class FakeProductRepository implements ProductRepository {
     yield const Right([
       Product(
         id: 'p1',
-        name: 'Mạch Arduino Uno',
-        description: 'Mạch nạp vi điều khiển',
-        price: 150000.0,
-        imageUrl: 'arduino.png',
-        category: 'Mạch điện',
+        name: 'Điện thoại iPhone 15',
+        description: 'iPhone 15 Pro Max',
+        price: 25000000.0,
+        imageUrl: 'iphone15.png',
+        category: 'Điện thoại',
+        isFeatured: false,
       ),
     ]);
   }
@@ -32,7 +33,7 @@ void main() {
       (l) => fail('Should be right'),
       (r) {
         expect(r.length, 1);
-        expect(r.first.name, 'Mạch Arduino Uno');
+        expect(r.first.name, 'Điện thoại iPhone 15');
       },
     );
   });

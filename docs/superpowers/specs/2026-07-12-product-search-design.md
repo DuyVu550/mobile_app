@@ -71,5 +71,5 @@ Implement a real-time product search feature by name (keyword) directly on the m
   * Verify the "no results found" UI is shown when no items match.
 
 ### Manual Verification
-* Deploy mock items to Firestore collection `/products` (e.g., "Mạch Arduino Uno", "Cảm biến siêu âm SRF05", "Đèn LED RGB").
-* Verify on emulator that entering search query (e.g. "arduino" or "cảm biến" or "LED") displays only the matched products in real time.
+* Deploy mock items to Firestore collection `/products` (e.g., "Điện thoại iPhone 15", "Laptop MacBook Pro", "iPad Pro").
+* Verify on emulator that entering search query (e.g. "iphone" or "macbook" or "ipad") displays only the matched products in real time.

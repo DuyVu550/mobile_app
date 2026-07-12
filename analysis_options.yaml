@@ -50,7 +50,7 @@
 #      - Module user bao gồm các tính năng: đăng nhập, đăng ký, quên mật khẩu, đổi mật khẩu, hiển thị user profile, đăng xuất.
 #      - Tính năng tìm kiếm sản phẩm theo tên (nhập keyword).
 #      - Tính năng Slide Image: hiển thị những sản phẩm nổi bật, cứ sau 3s tự động chuyển slide một lần.
-#      - Hiển thị danh sách sản phẩm hoàn toàn realtime từ Firebase Database. Các sản phẩm được phân chia theo từng thể loại khác nhau: Cảm biến, Đèn LED, Mạch điện… Mỗi một thể loại tương ứng với 1 Tab riêng biệt.
+#      - Hiển thị danh sách sản phẩm hoàn toàn realtime từ Firebase Database. Các sản phẩm được phân chia theo từng thể loại khác nhau: điện thoại, laptop,... Mỗi một thể loại tương ứng với 1 Tab riêng biệt.
 #      - Tính năng lọc sản phẩm theo những tiêu chí khác nhau: lọc theo xếp hạng, lọc theo giá, lọc theo chương trình khuyến mại…
 #      - Hiển thị chi tiết thông tin của sản phẩm (Detail): ảnh, tên, miêu tả, thông số kỹ thuật của sản phẩm…
 #      - Tính năng Xếp hạng và đánh giá sản phẩm (Rating & Review).

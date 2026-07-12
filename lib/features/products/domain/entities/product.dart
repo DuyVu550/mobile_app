@@ -5,6 +5,7 @@ class Product {
   final double price;
   final String imageUrl;
   final String category;
+  final bool isFeatured;
 
   const Product({
     required this.id,
@@ -13,5 +14,6 @@ class Product {
     required this.price,
     required this.imageUrl,
     required this.category,
+    required this.isFeatured,
   });
 }

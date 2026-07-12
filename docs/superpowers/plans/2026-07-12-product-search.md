@@ -43,11 +43,11 @@
       yield const Right([
         Product(
           id: 'p1',
-          name: 'Mạch Arduino Uno',
-          description: 'Mạch nạp vi điều khiển',
-          price: 150000.0,
-          imageUrl: 'arduino.png',
-          category: 'Mạch điện',
+          name: 'Điện thoại iPhone 15',
+          description: 'iPhone 15 Pro Max',
+          price: 25000000.0,
+          imageUrl: 'iphone15.png',
+          category: 'Điện thoại',
         ),
       ]);
     }
@@ -64,7 +64,7 @@
         (l) => fail('Should be right'),
         (r) {
           expect(r.length, 1);
-          expect(r.first.name, 'Mạch Arduino Uno');
+          expect(r.first.name, 'Điện thoại iPhone 15');
         },
       );
     });
@@ -161,11 +161,11 @@
       return Stream.value([
         const ProductModel(
           id: 'p1',
-          name: 'Mạch Arduino Uno',
-          description: 'Mạch nạp vi điều khiển',
-          price: 150000.0,
-          imageUrl: 'arduino.png',
-          category: 'Mạch điện',
+          name: 'Điện thoại iPhone 15',
+          description: 'iPhone 15 Pro Max',
+          price: 25000000.0,
+          imageUrl: 'iphone15.png',
+          category: 'Điện thoại',
         ),
       ]);
     }
@@ -186,7 +186,7 @@
         (r) {
           expect(r.length, 1);
           expect(r.first.id, 'p1');
-          expect(r.first.name, 'Mạch Arduino Uno');
+          expect(r.first.name, 'Điện thoại iPhone 15');
         },
       );
     });
@@ -333,19 +333,19 @@
       return Stream.value(const Right([
         Product(
           id: 'p1',
-          name: 'Mạch Arduino',
-          description: 'Arduino Uno R3',
-          price: 150000.0,
-          imageUrl: 'arduino.png',
-          category: 'Mạch điện',
+          name: 'Điện thoại iPhone',
+          description: 'iPhone 15 Pro Max',
+          price: 25000000.0,
+          imageUrl: 'iphone.png',
+          category: 'Điện thoại',
         ),
         Product(
           id: 'p2',
-          name: 'Cảm biến siêu âm',
-          description: 'Cảm biến SRF05',
-          price: 50000.0,
-          imageUrl: 'sensor.png',
-          category: 'Cảm biến',
+          name: 'Laptop MacBook',
+          description: 'MacBook Pro M3',
+          price: 45000000.0,
+          imageUrl: 'macbook.png',
+          category: 'Laptop',
         ),
       ]));
     }
@@ -366,11 +366,11 @@
       final allProducts = container.read(filteredProductsProvider).value;
       expect(allProducts?.length, 2);
 
-      // Filter by 'arduino'
-      container.read(productListNotifierProvider.notifier).updateSearchQuery('arduino');
+      // Filter by 'iphone'
+      container.read(productListNotifierProvider.notifier).updateSearchQuery('iphone');
       final filtered = container.read(filteredProductsProvider).value;
       expect(filtered?.length, 1);
-      expect(filtered?.first.name, 'Mạch Arduino');
+      expect(filtered?.first.name, 'Điện thoại iPhone');
     });
   }
   ```
@@ -492,11 +492,11 @@
     testWidgets('ProductCard renders product details', (tester) async {
       const product = Product(
         id: 'p1',
-        name: 'Mạch Arduino Uno',
-        description: 'Arduino Uno R3',
-        price: 150000.0,
-        imageUrl: 'arduino.png',
-        category: 'Mạch điện',
+        name: 'Điện thoại iPhone 15',
+        description: 'iPhone 15 Pro Max',
+        price: 25000000.0,
+        imageUrl: 'iphone15.png',
+        category: 'Điện thoại',
       );
 
       await tester.pumpWidget(
@@ -507,9 +507,9 @@
         ),
       );
 
-      expect(find.text('Mạch Arduino Uno'), findsOneWidget);
-      expect(find.text('Mạch điện'), findsOneWidget);
-      expect(find.text('150.000đ'), findsOneWidget);
+      expect(find.text('Điện thoại iPhone 15'), findsOneWidget);
+      expect(find.text('Điện thoại'), findsOneWidget);
+      expect(find.text('25.000.000đ'), findsOneWidget);
     });
   }
   ```
@@ -605,11 +605,11 @@
       final mockProducts = [
         const Product(
           id: 'p1',
-          name: 'Mạch Arduino',
+          name: 'Điện thoại iPhone',
           description: 'Mô tả',
-          price: 150000.0,
-          imageUrl: 'arduino.png',
-          category: 'Mạch điện',
+          price: 15000000.0,
+          imageUrl: 'iphone.png',
+          category: 'Điện thoại',
         ),
       ];
 
@@ -626,7 +626,7 @@
 
       expect(find.byType(TextField), findsOneWidget);
       expect(find.text('Tìm kiếm sản phẩm...'), findsOneWidget);
-      expect(find.text('Mạch Arduino'), findsOneWidget);
+      expect(find.text('Điện thoại iPhone'), findsOneWidget);
     });
   }
   ```
