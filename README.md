@@ -1,8 +1,8 @@
 # Toy App
 
-Ung dung thuong mai dien tu ban do choi va do dien tu duoc phat trien bang Flutter va Firebase.
+Ứng dụng thương mại điện tử bán đồ chơi và đồ điện tử được phát triển bằng Flutter và Firebase.
 
-## Cong nghe su dung
+## Công nghệ sử dụng
 
 - Core: Flutter SDK
 - State Management: Riverpod
@@ -10,50 +10,50 @@ Ung dung thuong mai dien tu ban do choi va do dien tu duoc phat trien bang Flutt
 - Authentication: Firebase Authentication
 - Local Testing: Flutter Chrome/Android
 
-## Kien truc du an
+## Kiến trúc dự án
 
-Du an duoc thiet ke theo phuong phap Clean Architecture chia lam cac tang:
-- Domain: Chua cac thuc the (Entities) va giao dien Repository (Repository Interfaces) doc lap voi framework.
-- Data: Chua cac Model ke thua tu Entity ho tro serialization va lop trien khai Repository de tuong tac voi Firebase Firestore.
-- Presentation: Chua cac Widget (Views) va cac StateNotifier/Providers de quan ly trang thai va logic giao dien.
+Dự án được thiết kế theo phương pháp Clean Architecture chia làm các tầng:
+- Domain: Chứa các thực thể (Entities) và giao diện Repository (Repository Interfaces) độc lập với framework.
+- Data: Chứa các Model kế thừa từ Entity hỗ trợ serialization và lớp triển khai Repository để tương tác với Firebase Firestore.
+- Presentation: Chứa các Widget (Views) và các StateNotifier/Providers để quản lý trạng thái và logic giao diện.
 
-## Cac tinh nang chinh
+## Các tính năng chính
 
-### Role Admin
-- Quan ly danh muc san pham (Category): Them, sua, xoa, tim kiem va hien thi danh sach.
-- Quan ly san pham (Product): Them, sua, xoa, tim kiem va hien thi thong tin.
-- Quan ly thuong hieu (Brand): Them, sua, xoa va hien thi danh sach thuong hieu.
-- Quan ly don hang (Order): Danh sach don hang phan chia theo tab trang thai (Dang xu ly, Da hoan thanh), cho phap cap nhat trang thai don hang.
-- Quan ly khuyen mai (Promotion): Them, sua, xoa va hien thi ma khuyen mai de kich cau mua sam.
-- Phan quyen tai khoan: Gan quyen Admin cho nguoi dung khac.
-- Thong ke va bao cao: Theo doi doanh thu va danh sach san pham ban chay theo thoi gian.
-- Xem phan hoi: Nhan va quan ly cac y kien, dong gop tu nguoi dung.
+### Quyền Admin (Admin Role)
+- Quản lý danh mục sản phẩm (Category): Thêm, sửa, xóa, tìm kiếm và hiển thị danh sách.
+- Quản lý sản phẩm (Product): Thêm, sửa, xóa, tìm kiếm và hiển thị thông tin.
+- Quản lý thương hiệu (Brand): Thêm, sửa, xóa và hiển thị danh sách thương hiệu.
+- Quản lý đơn hàng (Order): Danh sách đơn hàng phân chia theo tab trạng thái (Đang xử lý, Đã hoàn thành), cho phép cập nhật trạng thái đơn hàng.
+- Quản lý khuyến mãi (Promotion): Thêm, sửa, xóa và hiển thị mã khuyến mại để kích cầu mua sắm.
+- Phân quyền tài khoản: Gán quyền Admin cho người dùng khác.
+- Thống kê và báo cáo: Theo dõi doanh thu và danh sách sản phẩm bán chạy theo thời gian.
+- Xem phản hồi: Nhận và quản lý các ý kiến, đóng góp từ người dùng.
 
-### Role User
-- Tai khoan: Dang ky, dang nhap, quen mat khau, doi mat khau, hien thi thong tin profile va dang xuat.
-- Trang chu va tim kiem: Tim kiem san pham theo tu khoa, slide banner san pham noi bat tu dong chuyen tiep.
-- Danh sach san pham: Hien thi danh sach san pham theo phan loai tab realtime tu Firebase, loc san pham theo gia, xep hang va khuyen mai.
-- Chi tiet san pham: Xem thong tin anh, ten, gia, mo ta va thong so ky thuat san pham.
-- Danh gia san pham: Tinh nang gui xep hang va danh gia nhan xet san pham.
-- Gio hang: Realtime dong bo hoa voi Firebase. Them/bot so luong hoac xoa san pham khoi gio hang.
-- Thanh toan (Checkout):
-  - Chon hoac them dia chi giao hang moi linh hoat.
-  - Lua chon phuong thuc thanh toan: Thanh toan khi nhan hang (COD) hoac Chuyen khoan.
-  - Tra cuu va ap dung tu dong ma giam gia hop le tu Firestore (ho tro autocomplete).
-- Lich su don hang: Xem danh sach don hang va lich trinh trang thai giao nhan.
-- Gui feedback: Gui kien nghi va danh gia ve chat luong ung dung.
+### Quyền Người dùng (User Role)
+- Tài khoản: Đăng ký, đăng nhập, quên mật khẩu, đổi mật khẩu, hiển thị thông tin profile và đăng xuất.
+- Trang chủ và tìm kiếm: Tìm kiếm sản phẩm theo từ khóa, slide banner sản phẩm nổi bật tự động chuyển tiếp.
+- Danh sách sản phẩm: Hiển thị danh sách sản phẩm theo phân loại tab realtime từ Firebase, lọc sản phẩm theo giá, xếp hạng và khuyến mại.
+- Chi tiết sản phẩm: Xem thông tin ảnh, tên, giá, mô tả và thông số kỹ thuật sản phẩm.
+- Đánh giá sản phẩm: Tính năng gửi xếp hạng và đánh giá nhận xét sản phẩm.
+- Giỏ hàng: Realtime đồng bộ hóa với Firebase. Thêm/bớt số lượng hoặc xóa sản phẩm khỏi giỏ hàng.
+- Thanh toán (Checkout):
+  - Chọn hoặc thêm địa chỉ giao hàng mới linh hoạt.
+  - Lựa chọn phương thức thanh toán: Thanh toán khi nhận hàng (COD) hoặc Chuyển khoản.
+  - Tra cứu và áp dụng tự động mã giảm giá hợp lệ từ Firestore (hỗ trợ autocomplete).
+- Lịch sử đơn hàng: Xem danh sách đơn hàng và lịch trình trạng thái giao nhận.
+- Gửi feedback: Gửi kiến nghị và đánh giá về chất lượng ứng dụng.
 
-## Huong dan chay ung dung
+## Hướng dẫn chạy ứng dụng
 
-1. Cai dat cac dependency:
+1. Cài đặt các thư viện:
    ```bash
    flutter pub get
    ```
-2. Chay ung dung tren trinh duyet Chrome hoac thiet bi Emulator:
+2. Chạy ứng dụng trên trình duyệt Chrome hoặc thiết bị giả lập:
    ```bash
    flutter run -d chrome
    ```
-3. Cap nhat luat bao mat Firestore khi co thay doi (tren Firebase Console Rules hoac qua CLI):
+3. Cập nhật quy tắc bảo mật Firestore khi có thay đổi (trên Firebase Console hoặc qua CLI):
    ```bash
    firebase deploy --only firestore:rules
    ```
