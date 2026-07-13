@@ -35,6 +35,16 @@ service cloud.firestore {
       allow read: if true;
       // Allow users to write their own profile document on register
       allow write: if isAuthenticated() && request.auth.uid == uid;
+
+      // Rules for the cart sub-collection
+      match /cart/{productId} {
+        allow read: if isAuthenticated() && request.auth.uid == uid;
+        allow delete: if isAuthenticated() && request.auth.uid == uid;
+        allow create, update: if isAuthenticated() 
+                               && request.auth.uid == uid
+                               && request.resource.data.quantity is int
+                               && request.resource.data.quantity >= 1;
+      }
     }
 
     // Rules for the categories collection
