@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../../core/services/file_upload_service.dart';
-import '../../../products/presentation/views/category_admin_screen.dart';
 import '../controllers/auth_action_controller.dart';
 import '../controllers/auth_providers.dart';
 import '../../domain/entities/app_user.dart';
@@ -82,13 +81,14 @@ class ProfileScreen extends ConsumerWidget {
                       border: OutlineInputBorder(),
                     ),
                   ),
-                   const SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   const Text(
                     'Chọn ảnh đại diện có sẵn hoặc tải lên:',
                     style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.grey),
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.grey,
+                    ),
                   ),
                   const SizedBox(height: 10),
                   Row(
@@ -143,16 +143,19 @@ class ProfileScreen extends ConsumerWidget {
                         child: isUploadingImage
                             ? const Padding(
                                 padding: EdgeInsets.all(16),
-                                child: CircularProgressIndicator(strokeWidth: 2),
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
                               )
                             : InkWell(
                                 onTap: isLoading
                                     ? null
                                     : () async {
                                         final picker = ImagePicker();
-                                        final XFile? image = await picker.pickImage(
-                                          source: ImageSource.gallery,
-                                        );
+                                        final XFile? image = await picker
+                                            .pickImage(
+                                              source: ImageSource.gallery,
+                                            );
                                         if (image == null) return;
 
                                         setModalState(() {
@@ -160,38 +163,61 @@ class ProfileScreen extends ConsumerWidget {
                                         });
 
                                         try {
-                                          final bytes = await image.readAsBytes();
-                                          final uploadService = ref.read(fileUploadServiceProvider);
-                                          final result = await uploadService.uploadFile(
-                                            bytes,
-                                            image.name,
-                                            webBlobUrl: image.path,
+                                          final bytes = await image
+                                              .readAsBytes();
+                                          final uploadService = ref.read(
+                                            fileUploadServiceProvider,
                                           );
+                                          final result = await uploadService
+                                              .uploadFile(
+                                                bytes,
+                                                image.name,
+                                                webBlobUrl: image.path,
+                                              );
 
                                           result.fold(
                                             (error) {
                                               if (context.mounted) {
-                                                ScaffoldMessenger.of(context).showSnackBar(
-                                                  SnackBar(content: Text('Không thể tải ảnh lên: $error')),
+                                                ScaffoldMessenger.of(
+                                                  context,
+                                                ).showSnackBar(
+                                                  SnackBar(
+                                                    content: Text(
+                                                      'Không thể tải ảnh lên: $error',
+                                                    ),
+                                                  ),
                                                 );
                                               }
                                             },
                                             (uploadedUrl) {
                                               setModalState(() {
                                                 selectedAvatar = uploadedUrl;
-                                                avatarController.text = uploadedUrl;
+                                                avatarController.text =
+                                                    uploadedUrl;
                                               });
                                               if (context.mounted) {
-                                                ScaffoldMessenger.of(context).showSnackBar(
-                                                  const SnackBar(content: Text('Tải ảnh lên thành công!')),
+                                                ScaffoldMessenger.of(
+                                                  context,
+                                                ).showSnackBar(
+                                                  const SnackBar(
+                                                    content: Text(
+                                                      'Tải ảnh lên thành công!',
+                                                    ),
+                                                  ),
                                                 );
                                               }
                                             },
                                           );
                                         } catch (e) {
                                           if (context.mounted) {
-                                            ScaffoldMessenger.of(context).showSnackBar(
-                                              SnackBar(content: Text('Không thể tải ảnh lên: $e')),
+                                            ScaffoldMessenger.of(
+                                              context,
+                                            ).showSnackBar(
+                                              SnackBar(
+                                                content: Text(
+                                                  'Không thể tải ảnh lên: $e',
+                                                ),
+                                              ),
                                             );
                                           }
                                         } finally {
@@ -209,20 +235,6 @@ class ProfileScreen extends ConsumerWidget {
                               ),
                       ),
                     ],
-                  ),
-                  const SizedBox(height: 16),
-                  TextField(
-                    controller: avatarController,
-                    enabled: !isLoading,
-                    decoration: const InputDecoration(
-                      labelText: 'Hoặc nhập URL ảnh khác',
-                      border: OutlineInputBorder(),
-                    ),
-                    onChanged: (val) {
-                      setModalState(() {
-                        selectedAvatar = val;
-                      });
-                    },
                   ),
                   const SizedBox(height: 24),
                   Row(
@@ -248,8 +260,10 @@ class ProfileScreen extends ConsumerWidget {
                                 if (name.isEmpty) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
-                                        content:
-                                            Text('Họ và tên không được để trống')),
+                                      content: Text(
+                                        'Họ và tên không được để trống',
+                                      ),
+                                    ),
                                   );
                                   return;
                                 }
@@ -271,8 +285,10 @@ class ProfileScreen extends ConsumerWidget {
                                     Navigator.pop(sheetContext); // Close sheet
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(
-                                          content:
-                                              Text('Cập nhật hồ sơ thành công!')),
+                                        content: Text(
+                                          'Cập nhật hồ sơ thành công!',
+                                        ),
+                                      ),
                                     );
                                   } else {
                                     setModalState(() {
@@ -283,8 +299,10 @@ class ProfileScreen extends ConsumerWidget {
                                         .errorMessage;
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
-                                          content:
-                                              Text(error ?? 'Cập nhật thất bại.')),
+                                        content: Text(
+                                          error ?? 'Cập nhật thất bại.',
+                                        ),
+                                      ),
                                     );
                                   }
                                 }
@@ -295,8 +313,9 @@ class ProfileScreen extends ConsumerWidget {
                                 width: 20,
                                 child: CircularProgressIndicator(
                                   strokeWidth: 2,
-                                  valueColor:
-                                      AlwaysStoppedAnimation(Colors.black87),
+                                  valueColor: AlwaysStoppedAnimation(
+                                    Colors.black87,
+                                  ),
                                 ),
                               )
                             : const Text('Lưu'),
@@ -339,10 +358,9 @@ class ProfileScreen extends ConsumerWidget {
                           backgroundColor: Colors.amber.shade100,
                           backgroundImage:
                               user.photoUrl != null && user.photoUrl!.isNotEmpty
-                                  ? NetworkImage(user.photoUrl!)
-                                  : null,
-                          child: user.photoUrl == null ||
-                                  user.photoUrl!.isEmpty
+                              ? NetworkImage(user.photoUrl!)
+                              : null,
+                          child: user.photoUrl == null || user.photoUrl!.isEmpty
                               ? Text(
                                   _initials(user.displayName, user.email),
                                   style: const TextStyle(
@@ -364,8 +382,11 @@ class ProfileScreen extends ConsumerWidget {
                               shape: BoxShape.circle,
                             ),
                             child: IconButton(
-                              icon: const Icon(Icons.camera_alt,
-                                  size: 16, color: Colors.white),
+                              icon: const Icon(
+                                Icons.camera_alt,
+                                size: 16,
+                                color: Colors.white,
+                              ),
                               onPressed: () => _editProfile(context, ref, user),
                               padding: EdgeInsets.zero,
                             ),
@@ -384,12 +405,17 @@ class ProfileScreen extends ConsumerWidget {
                               ? user.displayName!
                               : 'Chưa đặt tên',
                           style: const TextStyle(
-                              fontSize: 22, fontWeight: FontWeight.bold),
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                         const SizedBox(width: 8),
                         IconButton(
-                          icon: const Icon(Icons.edit,
-                              size: 18, color: Colors.grey),
+                          icon: const Icon(
+                            Icons.edit,
+                            size: 18,
+                            color: Colors.grey,
+                          ),
                           onPressed: () => _editProfile(context, ref, user),
                           constraints: const BoxConstraints(),
                           padding: EdgeInsets.zero,
@@ -404,21 +430,6 @@ class ProfileScreen extends ConsumerWidget {
                     value: user.email,
                   ),
                   const SizedBox(height: 32),
-                  if (role == 'admin') ...[
-                    OutlinedButton.icon(
-                      onPressed: () => Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) => const CategoryAdminScreen(),
-                        ),
-                      ),
-                      icon: const Icon(Icons.category),
-                      label: const Text('Quản lý thể loại'),
-                      style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                  ],
                   OutlinedButton.icon(
                     onPressed: () => Navigator.of(context).push(
                       MaterialPageRoute(
@@ -474,14 +485,17 @@ class _InfoTile extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 12),
       child: ListTile(
         leading: Icon(icon, color: Colors.amber),
-        title: Text(label,
-            style: const TextStyle(fontSize: 13, color: Colors.grey)),
+        title: Text(
+          label,
+          style: const TextStyle(fontSize: 13, color: Colors.grey),
+        ),
         subtitle: Text(
           value,
           style: const TextStyle(
-              fontSize: 16,
-              color: Colors.black87,
-              fontWeight: FontWeight.w500),
+            fontSize: 16,
+            color: Colors.black87,
+            fontWeight: FontWeight.w500,
+          ),
         ),
       ),
     );

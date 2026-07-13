@@ -15,3 +15,11 @@ String removeDiacritics(String input) {
   }
   return buffer.toString();
 }
+
+/// Định dạng số tiền thành chuỗi có dấu chấm phân cách hàng nghìn (ví dụ: 12.500.000đ)
+String formatPrice(num price) {
+  return '${price.toInt().toString().replaceAllMapped(
+        RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+        (Match m) => '${m[1]}.',
+      )}đ';
+}

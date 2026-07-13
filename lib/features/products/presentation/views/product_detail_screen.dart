@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/product.dart';
 import 'widgets/rating_section.dart';
+import '../../../../core/utils/string_utils.dart';
 
 class ProductDetailScreen extends ConsumerWidget {
   final Product product;
@@ -21,7 +22,7 @@ class ProductDetailScreen extends ConsumerWidget {
               product.imageUrl,
               height: 250,
               width: double.infinity,
-              fit: BoxFit.cover,
+              fit: BoxFit.contain,
               errorBuilder: (_, _, _) => Container(
                 height: 250,
                 color: Colors.grey[300],
@@ -46,7 +47,7 @@ class ProductDetailScreen extends ConsumerWidget {
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    '${product.price.toStringAsFixed(0)}đ',
+                    formatPrice(product.price),
                     style: const TextStyle(
                       color: Colors.redAccent,
                       fontSize: 22,

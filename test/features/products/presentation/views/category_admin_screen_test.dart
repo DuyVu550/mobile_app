@@ -20,7 +20,7 @@ void main() {
     await firestore.collection('categories').add({'name': 'Laptop'});
 
     await tester.pumpWidget(wrap(const CategoryAdminScreen(), firestore));
-    await tester.pump();
+    await tester.pumpAndSettle();
 
     expect(find.text('Điện thoại'), findsOneWidget);
     expect(find.text('Laptop'), findsOneWidget);

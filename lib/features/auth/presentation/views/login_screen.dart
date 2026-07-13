@@ -83,16 +83,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _passwordController,
-                  obscureText: _obscure,
-                  decoration: InputDecoration(
+                  obscureText: true,
+                  decoration: const InputDecoration(
                     labelText: 'Mật khẩu',
-                    prefixIcon: const Icon(Icons.lock_outline),
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                          _obscure ? Icons.visibility : Icons.visibility_off),
-                      onPressed: () => setState(() => _obscure = !_obscure),
-                    ),
-                    border: const OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.lock_outline),
+                    border: OutlineInputBorder(),
                   ),
                   validator: (v) => (v == null || v.isEmpty)
                       ? 'Vui lòng nhập mật khẩu'

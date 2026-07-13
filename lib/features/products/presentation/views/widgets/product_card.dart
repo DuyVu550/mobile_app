@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../../../domain/entities/product.dart';
 import '../product_detail_screen.dart';
 
+import 'package:toy_app/core/utils/string_utils.dart';
+
 class ProductCard extends StatelessWidget {
   final Product product;
 
@@ -9,10 +11,7 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final priceStr = '${product.price.toInt().toString().replaceAllMapped(
-          RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-          (Match m) => '${m[1]}.',
-        )}đ';
+    final priceStr = formatPrice(product.price);
 
     return GestureDetector(
       onTap: () => Navigator.of(context).push(

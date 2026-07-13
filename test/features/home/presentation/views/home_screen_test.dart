@@ -7,6 +7,8 @@ import 'package:toy_app/features/products/presentation/controllers/product_list_
 import 'package:toy_app/features/products/domain/entities/product.dart';
 import 'package:toy_app/features/products/domain/repositories/product_repository.dart';
 import 'package:toy_app/features/products/presentation/views/widgets/featured_product_slider.dart';
+import 'package:toy_app/features/auth/presentation/controllers/auth_providers.dart';
+import 'package:toy_app/features/auth/domain/entities/app_user.dart';
 
 class FakeProductRepository implements ProductRepository {
   @override
@@ -38,6 +40,15 @@ class FakeProductRepository implements ProductRepository {
   }
 }
 
+class FakeAppUser extends AppUser {
+  const FakeAppUser()
+      : super(
+          uid: 'uid123',
+          email: 'user@test.com',
+          displayName: 'Test User',
+        );
+}
+
 void main() {
   testWidgets(
       'HomeScreen renders search input, categories tabs, featured slider, and products list',
@@ -47,6 +58,8 @@ void main() {
         overrides: [
           productRepositoryProvider.overrideWithValue(FakeProductRepository()),
           categoriesProvider.overrideWith((ref) => Stream.value(['Tất cả', 'Điện thoại', 'Laptop'])),
+          authStateProvider.overrideWith((ref) => Stream.value(const FakeAppUser())),
+          userProfileProvider.overrideWith((ref) => Stream.value({'role': 'customer'})),
         ],
         child: const MaterialApp(
           home: HomeScreen(),

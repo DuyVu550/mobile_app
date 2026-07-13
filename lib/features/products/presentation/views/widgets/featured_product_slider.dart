@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../../../domain/entities/product.dart';
 import '../product_detail_screen.dart';
 
+import 'package:toy_app/core/utils/string_utils.dart';
+
 class FeaturedProductSlider extends StatefulWidget {
   final List<Product> products;
   const FeaturedProductSlider({super.key, required this.products});
@@ -118,7 +120,7 @@ class _FeaturedProductSliderState extends State<FeaturedProductSlider> {
                                 ),
                                 const SizedBox(height: 2),
                                 Text(
-                                  '${product.price.toStringAsFixed(0)}đ',
+                                  formatPrice(product.price),
                                   style: const TextStyle(
                                     color: Colors.redAccent,
                                     fontSize: 14,

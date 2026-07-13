@@ -39,6 +39,7 @@
 #    * Role Admin:
 #      - Admin có thể Thêm, Sửa, Xóa, Tìm kiếm, Hiển thị danh sách các thể loại (category).
 #      - Admin có thể Thêm, Sửa, Xóa, Tìm kiếm, Hiển thị danh sách các sản phẩm đồ điện tử.
+#      - Admin có thể Thêm, Sửa, Xóa, Tìm kiếm, Hiển thị danh sách các thương hiệu sản phẩm.
 #      - Admin có thể cập nhật trạng thái Order, hiển thị danh sách Orders của tất cả các users với 2 tab riêng biệt: Đang xử lý và Đã hoàn thành.
 #      - Admin có thể thực hiện phân quyền admin cho các tài khoản khác.
 #      - Admin có theo dõi doanh thu bán hàng theo thời gian.

@@ -15,21 +15,22 @@ class RatingSection extends ConsumerWidget {
 
     return reviewsAsync.when(
       loading: () => const SizedBox.shrink(),
-      error: (_, __) => const SizedBox.shrink(),
+      error: (_, _) => const SizedBox.shrink(),
       data: (reviews) {
         final count = reviews.length;
         final avg = count == 0
             ? 0.0
             : reviews
-                    .map((r) => (r['rating'] as num).toDouble())
-                    .reduce((a, b) => a + b) /
-                count;
+                      .map((r) => (r['rating'] as num).toDouble())
+                      .reduce((a, b) => a + b) /
+                  count;
         final userRating = currentUid == null
             ? null
             : (reviews
-                      .where((r) => r['uid'] == currentUid)
-                      .firstOrNull?['rating'] as num?)
-                    ?.toInt();
+                          .where((r) => r['uid'] == currentUid)
+                          .firstOrNull?['rating']
+                      as num?)
+                  ?.toInt();
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -37,10 +38,9 @@ class RatingSection extends ConsumerWidget {
             const Divider(height: 24),
             Text(
               'Đánh giá sản phẩm',
-              style: Theme.of(context)
-                  .textTheme
-                  .titleMedium
-                  ?.copyWith(fontWeight: FontWeight.bold),
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             Row(
@@ -50,7 +50,9 @@ class RatingSection extends ConsumerWidget {
                 Text(
                   avg.toStringAsFixed(1),
                   style: const TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 16),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
                 ),
                 const SizedBox(width: 8),
                 Text(
@@ -71,8 +73,10 @@ class RatingSection extends ConsumerWidget {
                   final star = i + 1;
                   return IconButton(
                     padding: EdgeInsets.zero,
-                    constraints:
-                        const BoxConstraints(minWidth: 36, minHeight: 36),
+                    constraints: const BoxConstraints(
+                      minWidth: 36,
+                      minHeight: 36,
+                    ),
                     icon: Icon(
                       star <= (userRating ?? 0)
                           ? Icons.star
