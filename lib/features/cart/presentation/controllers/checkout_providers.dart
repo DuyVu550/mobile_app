@@ -1,13 +1,14 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:toy_app/core/providers/firebase_providers.dart';
 import 'package:toy_app/features/auth/presentation/controllers/auth_providers.dart';
-import '../../domain/repositories/address_repository.dart';
-import '../../data/repositories/address_repository_impl.dart';
-import '../../domain/repositories/promotion_repository.dart';
-import '../../data/repositories/promotion_repository_impl.dart';
-import '../controllers/cart_providers.dart';
-import '../../domain/entities/address.dart';
-import '../../domain/entities/promotion.dart';
+import 'package:toy_app/features/cart/domain/repositories/address_repository.dart';
+import 'package:toy_app/features/cart/data/repositories/address_repository_impl.dart';
+import 'package:toy_app/features/cart/domain/repositories/promotion_repository.dart';
+import 'package:toy_app/features/cart/data/repositories/promotion_repository_impl.dart';
+import 'package:toy_app/features/cart/presentation/controllers/cart_providers.dart';
+import 'package:toy_app/features/cart/domain/entities/address.dart';
+import 'package:toy_app/features/cart/domain/entities/promotion.dart';
 
 final addressRepositoryProvider = Provider<AddressRepository>((ref) {
   final firestore = ref.watch(firestoreProvider);

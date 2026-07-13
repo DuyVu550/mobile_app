@@ -19,8 +19,11 @@ class FileUploadService {
     ),
   );
   
-  // Using catbox.moe for reliable, free, keyless direct-link file hosting on mobile
-  final String _uploadUrl = "https://catbox.moe/user/api.php";
+  // Load UPLOAD_URL from environment define, default to catbox.moe if not provided
+  final String _uploadUrl = const String.fromEnvironment(
+    'UPLOAD_URL',
+    defaultValue: "https://catbox.moe/user/api.php",
+  );
 
   /// Tải tệp lên server bằng bytes dữ liệu.
   ///
