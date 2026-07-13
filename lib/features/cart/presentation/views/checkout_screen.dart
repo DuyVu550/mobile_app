@@ -76,21 +76,29 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                     phoneController.text.isEmpty ||
                     lineController.text.isEmpty) return;
 
-                final repo = ref.read(addressRepositoryProvider);
-                final auth = ref.read(authStateProvider).valueOrNull;
-                if (auth != null) {
-                  await repo.addAddress(
-                    auth.uid,
-                    AddressModel(
-                      id: '',
-                      receiverName: nameController.text,
-                      phoneNumber: phoneController.text,
-                      addressLine: lineController.text,
-                      isDefault: isDefault,
-                    ),
-                  );
+                try {
+                  final repo = ref.read(addressRepositoryProvider);
+                  final auth = ref.read(authStateProvider).valueOrNull;
+                  if (auth != null) {
+                    await repo.addAddress(
+                      auth.uid,
+                      AddressModel(
+                        id: '',
+                        receiverName: nameController.text,
+                        phoneNumber: phoneController.text,
+                        addressLine: lineController.text,
+                        isDefault: isDefault,
+                      ),
+                    );
+                  }
+                  if (mounted) Navigator.of(ctx).pop();
+                } catch (e) {
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Lỗi khi lưu địa chỉ: $e')),
+                    );
+                  }
                 }
-                if (mounted) Navigator.of(ctx).pop();
               },
               child: const Text('Lưu'),
             ),
