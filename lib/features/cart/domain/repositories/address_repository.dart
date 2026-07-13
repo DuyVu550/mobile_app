@@ -1,7 +1,7 @@
-import '../../data/models/address_model.dart';
+import 'package:toy_app/features/cart/domain/entities/address.dart';
 
 abstract interface class AddressRepository {
-  Stream<List<AddressModel>> watchAddresses(String userId);
-  Future<void> addAddress(String userId, AddressModel address);
+  Stream<List<Address>> watchAddresses(String userId);
+  Future<void> addAddress(String userId, Address address);
   Future<void> setDefaultAddress(String userId, String addressId);
 }

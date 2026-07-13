@@ -1,4 +1,4 @@
-import '../entities/address.dart';
+import 'package:toy_app/features/cart/domain/entities/address.dart';
 
 class AddressModel extends Address {
   const AddressModel({

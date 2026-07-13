@@ -1,5 +1,5 @@
-import '../../data/models/promotion_model.dart';
+import 'package:toy_app/features/cart/domain/entities/promotion.dart';
 
 abstract interface class PromotionRepository {
-  Stream<List<PromotionModel>> watchActivePromotions();
+  Stream<List<Promotion>> watchActivePromotions();
 }

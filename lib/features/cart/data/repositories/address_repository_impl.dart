@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../domain/repositories/address_repository.dart';
-import '../../data/models/address_model.dart';
+import 'package:toy_app/features/cart/domain/entities/address.dart';
+import 'package:toy_app/features/cart/domain/repositories/address_repository.dart';
+import 'package:toy_app/features/cart/data/models/address_model.dart';
 
 class AddressRepositoryImpl implements AddressRepository {
   final FirebaseFirestore _firestore;
@@ -11,16 +12,23 @@ class AddressRepositoryImpl implements AddressRepository {
       _firestore.collection('users/$userId/addresses');
 
   @override
-  Stream<List<AddressModel>> watchAddresses(String userId) {
+  Stream<List<Address>> watchAddresses(String userId) {
     return _addressCol(userId).snapshots().map((snapshot) => snapshot.docs
-        .map((doc) => AddressModel.fromFirestore(doc.id, doc.data() as Map<String, dynamic>))
+        .map<Address>((doc) => AddressModel.fromFirestore(doc.id, doc.data() as Map<String, dynamic>))
         .toList());
   }
 
   @override
-  Future<void> addAddress(String userId, AddressModel address) async {
+  Future<void> addAddress(String userId, Address address) async {
     final docRef = _addressCol(userId).doc();
-    final data = address.toFirestore();
+    final model = AddressModel(
+      id: address.id,
+      receiverName: address.receiverName,
+      phoneNumber: address.phoneNumber,
+      addressLine: address.addressLine,
+      isDefault: address.isDefault,
+    );
+    final data = model.toFirestore();
     if (address.isDefault) {
       final batch = _firestore.batch();
       final existing = await _addressCol(userId).get();

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:toy_app/core/utils/string_utils.dart';
 import '../controllers/cart_providers.dart';
+import 'checkout_screen.dart';
 
 class CartScreen extends ConsumerWidget {
   const CartScreen({super.key});
@@ -137,8 +138,8 @@ class CartScreen extends ConsumerWidget {
                       ),
                       FilledButton(
                         onPressed: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Chức năng đặt hàng đang được hoàn thiện.')),
+                          Navigator.of(context).push(
+                            MaterialPageRoute(builder: (_) => const CheckoutScreen()),
                           );
                         },
                         child: const Text('Thanh toán'),

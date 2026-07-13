@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../domain/repositories/promotion_repository.dart';
-import '../../data/models/promotion_model.dart';
+import 'package:toy_app/features/cart/domain/entities/promotion.dart';
+import 'package:toy_app/features/cart/domain/repositories/promotion_repository.dart';
+import 'package:toy_app/features/cart/data/models/promotion_model.dart';
 
 class PromotionRepositoryImpl implements PromotionRepository {
   final FirebaseFirestore _firestore;
@@ -8,13 +9,13 @@ class PromotionRepositoryImpl implements PromotionRepository {
   PromotionRepositoryImpl(this._firestore);
 
   @override
-  Stream<List<PromotionModel>> watchActivePromotions() {
+  Stream<List<Promotion>> watchActivePromotions() {
     return _firestore
         .collection('promotions')
         .where('isActive', isEqualTo: true)
         .snapshots()
         .map((snapshot) => snapshot.docs
-            .map((doc) => PromotionModel.fromFirestore(doc.id, doc.data()))
+            .map<Promotion>((doc) => PromotionModel.fromFirestore(doc.id, doc.data()))
             .toList());
   }
 }
