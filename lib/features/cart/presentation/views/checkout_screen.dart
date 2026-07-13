@@ -4,7 +4,6 @@ import 'package:toy_app/core/utils/string_utils.dart';
 import 'package:toy_app/features/cart/presentation/controllers/cart_providers.dart';
 import 'package:toy_app/features/cart/presentation/controllers/checkout_providers.dart';
 import 'package:toy_app/features/cart/data/models/address_model.dart';
-import 'package:toy_app/features/cart/domain/entities/address.dart';
 import 'package:toy_app/features/cart/domain/entities/promotion.dart';
 import 'package:toy_app/features/auth/presentation/controllers/auth_providers.dart';
 
@@ -108,46 +107,58 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
     );
   }
 
-  void _selectAddressBottomSheet(List<Address> addresses) {
+  void _selectAddressBottomSheet() {
     showModalBottomSheet(
       context: context,
-      builder: (ctx) => SafeArea(
-        child: Column(
-          children: [
-            AppBar(
-              title: const Text('Chọn địa chỉ nhận hàng'),
-              automaticallyImplyLeading: false,
-              actions: [
-                IconButton(
-                  icon: const Icon(Icons.add),
-                  onPressed: () {
-                    Navigator.of(ctx).pop();
-                    _addAddressDialog();
-                  },
+      builder: (ctx) => Consumer(
+        builder: (context, ref, child) {
+          final addressesAsync = ref.watch(addressesProvider);
+          return SafeArea(
+            child: Column(
+              children: [
+                AppBar(
+                  title: const Text('Chọn địa chỉ nhận hàng'),
+                  automaticallyImplyLeading: false,
+                  actions: [
+                    IconButton(
+                      icon: const Icon(Icons.add),
+                      onPressed: () {
+                        Navigator.of(ctx).pop();
+                        _addAddressDialog();
+                      },
+                    ),
+                  ],
+                ),
+                Expanded(
+                  child: addressesAsync.when(
+                    data: (addresses) {
+                      if (addresses.isEmpty) {
+                        return const Center(child: Text('Chưa có địa chỉ nào được lưu.'));
+                      }
+                      return ListView.builder(
+                        itemCount: addresses.length,
+                        itemBuilder: (context, index) {
+                          final addr = addresses[index];
+                          return ListTile(
+                            title: Text('${addr.receiverName} - ${addr.phoneNumber}'),
+                            subtitle: Text(addr.addressLine),
+                            trailing: addr.isDefault ? const Icon(Icons.check, color: Colors.green) : null,
+                            onTap: () {
+                              ref.read(checkoutStateProvider.notifier).selectAddress(addr);
+                              Navigator.of(ctx).pop();
+                            },
+                          );
+                        },
+                      );
+                    },
+                    loading: () => const Center(child: CircularProgressIndicator()),
+                    error: (err, _) => Center(child: Text('Lỗi: $err')),
+                  ),
                 ),
               ],
             ),
-            Expanded(
-              child: addresses.isEmpty
-                  ? const Center(child: Text('Chưa có địa chỉ nào được lưu.'))
-                  : ListView.builder(
-                      itemCount: addresses.length,
-                      itemBuilder: (context, index) {
-                        final addr = addresses[index];
-                        return ListTile(
-                          title: Text('${addr.receiverName} - ${addr.phoneNumber}'),
-                          subtitle: Text(addr.addressLine),
-                          trailing: addr.isDefault ? const Icon(Icons.check, color: Colors.green) : null,
-                          onTap: () {
-                            ref.read(checkoutStateProvider.notifier).selectAddress(addr);
-                            Navigator.of(ctx).pop();
-                          },
-                        );
-                      },
-                    ),
-            ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
@@ -156,10 +167,8 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
   Widget build(BuildContext context) {
     final checkoutState = ref.watch(checkoutStateProvider);
     final originalPrice = ref.watch(cartTotalPriceProvider);
-    final addressesAsync = ref.watch(addressesProvider);
     final promotionsAsync = ref.watch(promotionsProvider);
 
-    final addresses = addressesAsync.valueOrNull ?? [];
     final promotions = promotionsAsync.valueOrNull ?? [];
 
     // Filter promotions matching user input
@@ -211,7 +220,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                             ),
                     ),
                     TextButton(
-                      onPressed: () => _selectAddressBottomSheet(addresses),
+                      onPressed: _selectAddressBottomSheet,
                       child: const Text('Thay đổi'),
                     ),
                   ],
