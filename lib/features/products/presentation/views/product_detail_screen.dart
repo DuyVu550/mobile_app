@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/product.dart';
 import 'widgets/rating_section.dart';
 import '../../../../core/utils/string_utils.dart';
+import '../../../cart/presentation/controllers/cart_providers.dart';
 
 class ProductDetailScreen extends ConsumerWidget {
   final Product product;
@@ -125,6 +126,23 @@ class ProductDetailScreen extends ConsumerWidget {
               ),
             ),
           ],
+        ),
+      ),
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: FilledButton.icon(
+            icon: const Icon(Icons.add_shopping_cart),
+            label: const Text('Thêm vào giỏ hàng'),
+            onPressed: () async {
+              await ref.read(cartActionControllerProvider.notifier).add(product.id, 1);
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Đã thêm sản phẩm vào giỏ hàng!')),
+                );
+              }
+            },
+          ),
         ),
       ),
     );

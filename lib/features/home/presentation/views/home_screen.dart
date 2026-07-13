@@ -7,6 +7,8 @@ import '../../../products/domain/entities/product.dart';
 import '../../../products/presentation/views/widgets/product_card.dart';
 import '../../../products/presentation/views/widgets/featured_product_slider.dart';
 import '../../../products/presentation/views/widgets/product_filter_bottom_sheet.dart';
+import 'package:toy_app/features/cart/presentation/controllers/cart_providers.dart';
+import 'package:toy_app/features/cart/presentation/views/cart_screen.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -39,6 +41,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final categoriesAsync = ref.watch(categoriesProvider);
     final categories = categoriesAsync.valueOrNull ?? const ['Tất cả'];
     final listState = ref.watch(productListNotifierProvider);
+    final cartCount = ref.watch(cartItemCountProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -47,6 +50,42 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         foregroundColor: Colors.white,
         elevation: 0,
         actions: [
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              IconButton(
+                icon: const Icon(Icons.shopping_cart),
+                onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => const CartScreen()),
+                ),
+              ),
+              if (cartCount > 0)
+                Positioned(
+                  right: 8,
+                  top: 8,
+                  child: Container(
+                    padding: const EdgeInsets.all(2),
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    constraints: const BoxConstraints(
+                      minWidth: 16,
+                      minHeight: 16,
+                    ),
+                    child: Text(
+                      '$cartCount',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+            ],
+          ),
           IconButton(
             icon: const Icon(Icons.person),
             onPressed: () => Navigator.of(context).push(

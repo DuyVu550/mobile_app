@@ -1,4 +1,3 @@
-import '../entities/cart_item.dart';
 import '../../data/models/cart_item_model.dart';
 
 abstract interface class CartRepository {
