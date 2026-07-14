@@ -1,11 +1,93 @@
 rules_version = '2';
 
 // ===============================================================
-// Firestore Security Rules
+// Assumed Data Model
+// ===============================================================
+//
+// This security rules file assumes the following data structures:
+//
+// Collection: users
+// Document ID: Firebase Auth UID
+// Fields:
+//   - uid: string (required, immutable) - Matches request.auth.uid
+//   - email: string (required, immutable) - Matches request.auth.token.email
+//   - displayName: string (required) - User's display name
+//   - role: string (required, immutable after creation) - 'user' or 'admin'
+//
+// Collection: users/{uid}/addresses
+// Document ID: Auto-generated ID
+// Fields:
+//   - receiverName: string (required) - Receiver's name
+//   - phoneNumber: string (required) - Receiver's phone number
+//   - addressLine: string (required) - Detailed address line
+//   - isDefault: bool (required) - True if default address
+//
+// Collection: users/{uid}/cart
+// Document ID: Product ID
+// Fields:
+//   - quantity: int (required, >= 1) - Quantity of product
+//   - addedAt: timestamp (optional) - When the item was added
+//
+// Collection: products
+// Document ID: Auto-generated ID
+// Fields:
+//   - name: string (required)
+//   - description: string (required)
+//   - price: number (required, >= 0)
+//   - imageUrl: string (required)
+//   - category: string (required)
+//   - isFeatured: bool (required)
+//   - rating: number (required, 0-5)
+//   - hasPromotion: bool (required)
+//   - specifications: map (optional)
+//
+// Collection: products/{productId}/reviews
+// Document ID: User Auth UID
+// Fields:
+//   - rating: int (required, 1-5)
+//   - createdAt: timestamp (optional)
+//
+// Collection: categories
+// Document ID: Auto-generated ID
+// Fields:
+//   - name: string (required)
+//
+// Collection: brands
+// Document ID: Auto-generated ID
+// Fields:
+//   - name: string (required)
+//
+// Collection: promotions
+// Document ID: Auto-generated ID
+// Fields:
+//   - code: string (required)
+//   - description: string (required)
+//   - discountPercent: number (required, 0-100)
+//   - minOrderValue: number (required, >= 0)
+//   - isActive: bool (required)
+//
+// Collection: orders
+// Document ID: Auto-generated ID
+// Fields:
+//   - userId: string (required, immutable) - Matches request.auth.uid
+//   - receiverName: string (required)
+//   - phoneNumber: string (required)
+//   - addressLine: string (required)
+//   - paymentMethod: string (required)
+//   - items: list (required) - List of order items
+//   - totalPrice: number (required, >= 0)
+//   - discount: number (required, >= 0)
+//   - status: string (required) - Starts as 'Đang xử lý'
+//   - createdAt: timestamp (required) - serverTimestamp
+//
 // ===============================================================
 
 service cloud.firestore {
   match /databases/{database}/documents {
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
 
     // Check if the user is authenticated
     function isAuthenticated() {
@@ -19,63 +101,196 @@ service cloud.firestore {
              get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
     }
 
-    // Default deny for all documents
+    // Check if the authenticated user owns the resource path by UID
+    function isOwner(uid) {
+      return isAuthenticated() && request.auth.uid == uid;
+    }
+
+    // Check if email contains 'admin' word to bootstrap admin role on create
+    function emailContainsAdmin() {
+      return 'email' in request.auth.token && request.auth.token.email.lower().matches('.*admin.*');
+    }
+
+    // ===============================================================
+    // Default Deny
+    // ===============================================================
     match /{document=**} {
       allow read, write: if false;
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+
+    // Rules for the users collection
+    match /users/{uid} {
+      // Only the user themselves or an admin can read their profile
+      allow read: if isOwner(uid) || isAdmin();
+      
+      // User validation functions
+      function isValidNewUser() {
+        return request.resource.data.uid == request.auth.uid &&
+               request.resource.data.email == request.auth.token.email &&
+               request.resource.data.displayName is string &&
+               request.resource.data.displayName.size() > 0 &&
+               (
+                 (emailContainsAdmin() && request.resource.data.role == 'admin') ||
+                 (!emailContainsAdmin() && request.resource.data.role == 'user')
+               );
+      }
+
+      // Allow users to create their own profile document on registration
+      allow create: if isOwner(uid) && isValidNewUser();
+
+      // Allow users to update their profile (prevent changing role, uid, email)
+      allow update: if isOwner(uid) &&
+                    (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['role', 'uid', 'email'])) &&
+                    request.resource.data.displayName is string &&
+                    request.resource.data.displayName.size() > 0;
+
+      // Rules for user addresses
+      match /addresses/{addressId} {
+        function isValidAddress() {
+          return request.resource.data.receiverName is string &&
+                 request.resource.data.receiverName.size() > 0 &&
+                 request.resource.data.phoneNumber is string &&
+                 request.resource.data.phoneNumber.size() > 0 &&
+                 request.resource.data.addressLine is string &&
+                 request.resource.data.addressLine.size() > 0 &&
+                 request.resource.data.isDefault is bool &&
+                 request.resource.data.keys().hasOnly(['receiverName', 'phoneNumber', 'addressLine', 'isDefault']);
+        }
+
+        allow read, delete: if isOwner(uid);
+        allow create, update: if isOwner(uid) && isValidAddress();
+      }
+
+      // Rules for the cart sub-collection
+      match /cart/{productId} {
+        allow read, delete: if isOwner(uid);
+        allow create, update: if isOwner(uid) &&
+                              request.resource.data.quantity is int &&
+                              request.resource.data.quantity >= 1 &&
+                              (!('addedAt' in request.resource.data) || request.resource.data.addedAt is timestamp) &&
+                              request.resource.data.keys().hasOnly(['quantity', 'addedAt']);
+      }
     }
 
     // Rules for the products collection
     match /products/{productId} {
       allow read: if true;
-      allow write: if isAdmin();
-    }
 
-    // Rules for the users collection
-    match /users/{uid} {
-      allow read: if true;
-      // Allow users to write their own profile document on register
-      allow write: if isAuthenticated() && request.auth.uid == uid;
-
-      // Rules for the cart sub-collection
-      match /cart/{productId} {
-        allow read: if isAuthenticated() && request.auth.uid == uid;
-        allow delete: if isAuthenticated() && request.auth.uid == uid;
-        allow create, update: if isAuthenticated() 
-                               && request.auth.uid == uid
-                               && request.resource.data.quantity is int
-                               && request.resource.data.quantity >= 1;
+      function isValidProduct() {
+        return request.resource.data.name is string &&
+               request.resource.data.name.size() > 0 &&
+               request.resource.data.description is string &&
+               request.resource.data.price is number &&
+               request.resource.data.price >= 0 &&
+               request.resource.data.imageUrl is string &&
+               request.resource.data.category is string &&
+               request.resource.data.isFeatured is bool &&
+               request.resource.data.rating is number &&
+               request.resource.data.rating >= 0 &&
+               request.resource.data.rating <= 5 &&
+               request.resource.data.hasPromotion is bool &&
+               (!('specifications' in request.resource.data) || request.resource.data.specifications is map);
       }
 
-      // Rules for user addresses
-      match /addresses/{addressId} {
-        allow read, write: if isAuthenticated() && request.auth.uid == uid;
+      allow write: if isAdmin() && isValidProduct();
+
+      // Sub-collection for reviews
+      match /reviews/{reviewUid} {
+        allow read: if true;
+        allow create, update: if isOwner(reviewUid) &&
+                              request.resource.data.rating is int &&
+                              request.resource.data.rating >= 1 &&
+                              request.resource.data.rating <= 5 &&
+                              (!('createdAt' in request.resource.data) || request.resource.data.createdAt is timestamp);
+        allow delete: if isOwner(reviewUid) || isAdmin();
       }
     }
 
     // Rules for the categories collection
     match /categories/{categoryId} {
       allow read: if true;
-      // Only admins can add, update, or delete categories
-      allow write: if isAdmin();
+      allow write: if isAdmin() && 
+                    request.resource.data.name is string && 
+                    request.resource.data.name.size() > 0;
     }
 
     // Rules for the brands collection
     match /brands/{brandId} {
       allow read: if true;
-      allow write: if isAdmin();
+      allow write: if isAdmin() && 
+                    request.resource.data.name is string && 
+                    request.resource.data.name.size() > 0;
     }
 
     // Rules for promotions collection
     match /promotions/{promoId} {
       allow read: if true;
-      allow write: if isAdmin();
+
+      function isValidPromotion() {
+        return request.resource.data.code is string &&
+               request.resource.data.code.size() > 0 &&
+               request.resource.data.description is string &&
+               request.resource.data.discountPercent is number &&
+               request.resource.data.discountPercent >= 0 &&
+               request.resource.data.discountPercent <= 100 &&
+               request.resource.data.minOrderValue is number &&
+               request.resource.data.minOrderValue >= 0 &&
+               request.resource.data.isActive is bool;
+      }
+
+      allow write: if isAdmin() && isValidPromotion();
     }
 
     // Rules for orders collection
     match /orders/{orderId} {
       allow read: if isAuthenticated() && (resource.data.userId == request.auth.uid || isAdmin());
-      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
-      allow update: if isAdmin();
+      
+      function isValidNewOrder() {
+        return request.resource.data.userId == request.auth.uid &&
+               request.resource.data.receiverName is string &&
+               request.resource.data.receiverName.size() > 0 &&
+               request.resource.data.phoneNumber is string &&
+               request.resource.data.phoneNumber.size() > 0 &&
+               request.resource.data.addressLine is string &&
+               request.resource.data.addressLine.size() > 0 &&
+               request.resource.data.paymentMethod is string &&
+               request.resource.data.items is list &&
+               request.resource.data.totalPrice is number &&
+               request.resource.data.totalPrice >= 0 &&
+               request.resource.data.discount is number &&
+               request.resource.data.discount >= 0 &&
+               request.resource.data.status == 'Đang xử lý' &&
+               request.resource.data.createdAt == request.time;
+      }
+
+      allow create: if isAuthenticated() && isValidNewOrder();
+      allow update: if (isAdmin() && 
+                    request.resource.data.status is string &&
+                    request.resource.data.status in ['Đang xử lý', 'Đang chuẩn bị', 'Đang giao', 'Đã hoàn thành']) ||
+                    (isAuthenticated() && 
+                     resource.data.userId == request.auth.uid &&
+                     resource.data.status == 'Đã hoàn thành' &&
+                     request.resource.data.diff(resource.data).affectedKeys().hasOnly(['deliveryRating', 'deliveryComment']) &&
+                     request.resource.data.deliveryRating is int &&
+                     request.resource.data.deliveryRating >= 1 &&
+                     request.resource.data.deliveryRating <= 5 &&
+                     (!('deliveryComment' in request.resource.data) || request.resource.data.deliveryComment is string));
+      allow delete: if isAdmin();
+    }
+
+    match /feedbacks/{feedbackId} {
+      allow create: if isAuthenticated() && 
+                    request.resource.data.userId == request.auth.uid &&
+                    request.resource.data.createdAt == request.time &&
+                    request.resource.data.type in ['Góp ý', 'Báo lỗi', 'Đánh giá ứng dụng'] &&
+                    request.resource.data.content is string &&
+                    (!('rating' in request.resource.data) || (request.resource.data.rating is int && request.resource.data.rating >= 1 && request.resource.data.rating <= 5));
+      allow read: if isAdmin();
+      allow update, delete: if false;
     }
   }
 }

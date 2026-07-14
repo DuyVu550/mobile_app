@@ -9,6 +9,7 @@ import '../../../products/presentation/views/widgets/featured_product_slider.dar
 import '../../../products/presentation/views/widgets/product_filter_bottom_sheet.dart';
 import 'package:toy_app/features/cart/presentation/controllers/cart_providers.dart';
 import 'package:toy_app/features/cart/presentation/views/cart_screen.dart';
+import 'package:toy_app/features/orders/presentation/views/order_history_screen.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -85,6 +86,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ),
                 ),
             ],
+          ),
+          IconButton(
+            icon: const Icon(Icons.receipt_long),
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const OrderHistoryScreen()),
+            ),
           ),
           IconButton(
             icon: const Icon(Icons.person),

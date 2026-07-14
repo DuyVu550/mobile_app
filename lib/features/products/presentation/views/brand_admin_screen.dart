@@ -115,7 +115,7 @@ class _BrandAdminScreenState extends ConsumerState<BrandAdminScreen> {
                                 child: Image.network(
                                   currentLogoUrl,
                                   fit: BoxFit.cover,
-                                  errorBuilder: (_, __, ___) => const Icon(Icons.broken_image),
+                                  errorBuilder: (_, _, _) => const Icon(Icons.broken_image),
                                 ),
                               )
                             : const Icon(Icons.image_outlined, color: Colors.grey),
@@ -315,7 +315,7 @@ class _BrandAdminScreenState extends ConsumerState<BrandAdminScreen> {
                                     child: Image.network(
                                       logoUrl,
                                       fit: BoxFit.cover,
-                                      errorBuilder: (_, __, ___) => const Icon(Icons.business),
+                                      errorBuilder: (_, _, _) => const Icon(Icons.business),
                                     ),
                                   )
                                 : const Icon(Icons.business),

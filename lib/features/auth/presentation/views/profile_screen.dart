@@ -6,6 +6,7 @@ import '../controllers/auth_action_controller.dart';
 import '../controllers/auth_providers.dart';
 import '../../domain/entities/app_user.dart';
 import 'change_password_screen.dart';
+import '../../../feedback/data/feedback_service.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -443,6 +444,15 @@ class ProfileScreen extends ConsumerWidget {
                     ),
                   ),
                   const SizedBox(height: 12),
+                  OutlinedButton.icon(
+                    onPressed: () => _showFeedbackDialog(context, ref, user),
+                    icon: const Icon(Icons.feedback_outlined),
+                    label: const Text('Gửi phản hồi / Báo lỗi'),
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
                   FilledButton.icon(
                     onPressed: () => _confirmSignOut(context, ref),
                     icon: const Icon(Icons.logout),
@@ -465,6 +475,122 @@ class ProfileScreen extends ConsumerWidget {
     final trimmed = source.trim();
     if (trimmed.isEmpty) return '?';
     return trimmed[0].toUpperCase();
+  }
+
+  void _showFeedbackDialog(BuildContext context, WidgetRef ref, AppUser user) {
+    String selectedType = 'Góp ý';
+    int selectedRating = 5;
+    final contentController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: const Text('Gửi phản hồi ứng dụng'),
+              content: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text('Loại phản hồi:'),
+                    DropdownButton<String>(
+                      value: selectedType,
+                      isExpanded: true,
+                      items: ['Góp ý', 'Báo lỗi', 'Đánh giá ứng dụng'].map((type) {
+                        return DropdownMenuItem(
+                          value: type,
+                          child: Text(type),
+                        );
+                      }).toList(),
+                      onChanged: (val) {
+                        if (val != null) {
+                          setState(() {
+                            selectedType = val;
+                          });
+                        }
+                      },
+                    ),
+                    if (selectedType == 'Đánh giá ứng dụng') ...[
+                      const SizedBox(height: 12),
+                      const Text('Chọn số sao hài lòng:'),
+                      const SizedBox(height: 8),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: List.generate(5, (index) {
+                          final starVal = index + 1;
+                          return IconButton(
+                            icon: Icon(
+                              starVal <= selectedRating ? Icons.star : Icons.star_border,
+                              color: Colors.amber,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                selectedRating = starVal;
+                              });
+                            },
+                          );
+                        }),
+                      ),
+                    ],
+                    const SizedBox(height: 12),
+                    TextField(
+                      controller: contentController,
+                      decoration: const InputDecoration(
+                        labelText: 'Nội dung phản hồi',
+                        border: OutlineInputBorder(),
+                      ),
+                      maxLines: 4,
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Hủy'),
+                ),
+                FilledButton(
+                  onPressed: () async {
+                    final content = contentController.text.trim();
+                    if (content.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Vui lòng nhập nội dung phản hồi!')),
+                      );
+                      return;
+                    }
+
+                    try {
+                      await ref.read(feedbackServiceProvider).submitFeedback(
+                        userId: user.uid,
+                        userEmail: user.email,
+                        type: selectedType,
+                        content: content,
+                        rating: selectedType == 'Đánh giá ứng dụng' ? selectedRating : null,
+                      );
+                      if (context.mounted) {
+                        Navigator.pop(context);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Cảm ơn ý kiến đóng góp của bạn!')),
+                        );
+                      }
+                    } catch (e) {
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Gửi thất bại: $e')),
+                        );
+                      }
+                    }
+                  },
+                  child: const Text('Gửi'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
   }
 }
 

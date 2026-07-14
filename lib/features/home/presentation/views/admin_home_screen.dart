@@ -6,6 +6,8 @@ import '../../../auth/presentation/views/profile_screen.dart';
 import '../../../products/presentation/views/category_admin_screen.dart';
 import '../../../products/presentation/views/product_admin_screen.dart';
 import '../../../products/presentation/views/brand_admin_screen.dart';
+import '../../../../features/orders/presentation/views/order_admin_screen.dart';
+import '../../../../features/feedback/presentation/views/feedback_admin_screen.dart';
 
 class AdminHomeScreen extends ConsumerStatefulWidget {
   const AdminHomeScreen({super.key});
@@ -23,6 +25,8 @@ class _AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
     'QUẢN LÝ THỂ LOẠI',
     'QUẢN LÝ SẢN PHẨM',
     'QUẢN LÝ THƯƠNG HIỆU',
+    'QUẢN LÝ ĐƠN HÀNG',
+    'QUẢN LÝ PHẢN HỒI',
     'HỒ SƠ CÁ NHÂN',
   ];
 
@@ -86,7 +90,7 @@ class _AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
+              color: color.withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
             child: Icon(icon, color: color, size: 24),
@@ -132,6 +136,10 @@ class _AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
       case 3:
         return const BrandAdminScreen();
       case 4:
+        return const OrderAdminScreen();
+      case 5:
+        return const FeedbackAdminScreen();
+      case 6:
         return const ProfileScreen();
       default:
         return const SizedBox.shrink();
@@ -247,7 +255,9 @@ class _AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
           _buildSidebarItem(1, Icons.category_outlined, 'Quản lý thể loại'),
           _buildSidebarItem(2, Icons.shopping_bag_outlined, 'Quản lý sản phẩm'),
           _buildSidebarItem(3, Icons.business_outlined, 'Quản lý thương hiệu'),
-          _buildSidebarItem(4, Icons.person_outline, 'Hồ sơ cá nhân'),
+          _buildSidebarItem(4, Icons.receipt_long, 'Quản lý đơn hàng'),
+          _buildSidebarItem(5, Icons.feedback_outlined, 'Quản lý phản hồi'),
+          _buildSidebarItem(6, Icons.person_outline, 'Hồ sơ cá nhân'),
           const Spacer(),
           Divider(color: Colors.grey.shade200),
           Material(

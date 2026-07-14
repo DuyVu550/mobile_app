@@ -9,6 +9,8 @@ import 'package:toy_app/features/cart/data/repositories/promotion_repository_imp
 import 'package:toy_app/features/cart/presentation/controllers/cart_providers.dart';
 import 'package:toy_app/features/cart/domain/entities/address.dart';
 import 'package:toy_app/features/cart/domain/entities/promotion.dart';
+import 'package:toy_app/features/orders/domain/entities/order_entity.dart';
+import 'package:toy_app/features/orders/presentation/controllers/order_providers.dart';
 
 final addressRepositoryProvider = Provider<AddressRepository>((ref) {
   final firestore = ref.watch(firestoreProvider);
@@ -87,37 +89,30 @@ class CheckoutNotifier extends StateNotifier<CheckoutState> {
     final auth = _ref.read(authStateProvider).valueOrNull;
     if (auth == null || state.selectedAddress == null) return;
 
-    final firestore = _ref.read(firestoreProvider);
     final cartItems = _ref.read(cartItemsProvider).valueOrNull ?? [];
 
-    final orderRef = firestore.collection('orders').doc();
-    final batch = firestore.batch();
+    final orderItems = cartItems.map((item) => OrderItemEntity(
+      productId: item.productId,
+      productName: item.product.name,
+      quantity: item.quantity,
+      price: item.product.price,
+    )).toList();
 
-    batch.set(orderRef, {
-      'userId': auth.uid,
-      'receiverName': state.selectedAddress!.receiverName,
-      'phoneNumber': state.selectedAddress!.phoneNumber,
-      'addressLine': state.selectedAddress!.addressLine,
-      'paymentMethod': state.paymentMethod,
-      'items': cartItems.map((item) => {
-        'productId': item.productId,
-        'productName': item.product.name,
-        'quantity': item.quantity,
-        'price': item.product.price,
-      }).toList(),
-      'totalPrice': finalPrice,
-      'discount': state.appliedPromotion != null ? state.appliedPromotion!.discountPercent : 0.0,
-      'status': 'Đang xử lý',
-      'createdAt': FieldValue.serverTimestamp(),
-    });
+    final order = OrderEntity(
+      id: '',
+      userId: auth.uid,
+      receiverName: state.selectedAddress!.receiverName,
+      phoneNumber: state.selectedAddress!.phoneNumber,
+      addressLine: state.selectedAddress!.addressLine,
+      paymentMethod: state.paymentMethod,
+      items: orderItems,
+      totalPrice: finalPrice,
+      discount: state.appliedPromotion != null ? state.appliedPromotion!.discountPercent : 0.0,
+      status: 'Đang xử lý',
+      createdAt: DateTime.now(),
+    );
 
-    // Clear Cart
-    final cartSnapshot = await firestore.collection('users/${auth.uid}/cart').get();
-    for (final doc in cartSnapshot.docs) {
-      batch.delete(doc.reference);
-    }
-
-    await batch.commit();
+    await _ref.read(orderRepositoryProvider).submitOrder(order);
   }
 }
 
