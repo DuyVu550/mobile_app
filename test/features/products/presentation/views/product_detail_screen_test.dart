@@ -21,6 +21,7 @@ void main() {
       isFeatured: true,
       rating: 4.8,
       hasPromotion: true,
+      stock: 10,
     );
 
     await tester.pumpWidget(
@@ -53,6 +54,7 @@ void main() {
       isFeatured: true,
       rating: 4.8,
       hasPromotion: true,
+      stock: 10,
       specifications: {
         'RAM': '8 GB',
         'Bộ nhớ': '128 GB',
@@ -89,6 +91,7 @@ void main() {
       isFeatured: true,
       rating: 4.8,
       hasPromotion: true,
+      stock: 10,
       specifications: {},
     );
 

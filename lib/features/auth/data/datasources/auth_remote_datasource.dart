@@ -85,8 +85,22 @@ class AuthRemoteDataSource {
       );
     }
     await user.updateDisplayName(displayName);
-    await user.updatePhotoURL(photoUrl.trim().isEmpty ? null : photoUrl);
+    
+    // Chỉ cập nhật photoURL của Firebase Auth nếu đó là URL thông thường (không phải base64)
+    if (photoUrl.isNotEmpty && !photoUrl.startsWith('data:')) {
+      await user.updatePhotoURL(photoUrl);
+    } else if (photoUrl.isEmpty) {
+      await user.updatePhotoURL(null);
+    }
+    
     await user.reload();
+
+    // Đồng bộ thông tin lên Firestore users collection (luôn lưu đầy đủ)
+    await FirebaseFirestore.instance.collection('users').doc(user.uid).update({
+      'displayName': displayName,
+      'photoUrl': photoUrl.trim().isEmpty ? null : photoUrl,
+    });
+
     return _firebaseAuth.currentUser ?? user;
   }
 }

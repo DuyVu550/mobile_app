@@ -18,33 +18,42 @@ class AuthGate extends ConsumerWidget {
     final authState = ref.watch(authStateProvider);
     final profileAsync = ref.watch(userProfileProvider);
 
-    return authState.when(
-      data: (user) {
-        if (user == null) {
-          return const LoginScreen();
-        }
-        return profileAsync.when(
-          data: (profile) {
-            final role = profile?['role'];
-            if (role == 'admin') {
-              return const AdminHomeScreen();
-            }
-            return const HomeScreen();
-          },
-          loading: () => const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
-          ),
-          error: (error, _) => Scaffold(
-            body: Center(child: Text('Lỗi tải quyền: $error')),
-          ),
-        );
-      },
-      loading: () => const Scaffold(
+    // Chỉ hiển thị màn hình Loading khi chưa có dữ liệu xác thực ban đầu
+    if (authState.isLoading && !authState.hasValue) {
+      return const Scaffold(
         body: Center(child: CircularProgressIndicator()),
-      ),
-      error: (error, _) => Scaffold(
-        body: Center(child: Text('Lỗi xác thực: $error')),
-      ),
-    );
+      );
+    }
+
+    if (authState.hasError) {
+      return Scaffold(
+        body: Center(child: Text('Lỗi xác thực: ${authState.error}')),
+      );
+    }
+
+    final user = authState.value;
+    if (user == null) {
+      return const LoginScreen();
+    }
+
+    // Chỉ hiển thị màn hình Loading khi chưa có thông tin profile ban đầu
+    if (profileAsync.isLoading && !profileAsync.hasValue) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    if (profileAsync.hasError) {
+      return Scaffold(
+        body: Center(child: Text('Lỗi tải quyền: ${profileAsync.error}')),
+      );
+    }
+
+    final profile = profileAsync.value;
+    final role = profile?['role'];
+    if (role == 'admin') {
+      return const AdminHomeScreen();
+    }
+    return const HomeScreen();
   }
 }

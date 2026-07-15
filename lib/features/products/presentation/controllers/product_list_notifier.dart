@@ -131,7 +131,7 @@ final filteredProductsProvider = Provider<AsyncValue<List<Product>>>((ref) {
       list = list.where((p) => p.rating >= state.minRating!).toList();
     }
 
-    // 5. Lọc theo chương trình khuyến mại
+    // 5. Lọc theo chương trình khuyến mãi
     if (state.onlyPromotions) {
       list = list.where((p) => p.hasPromotion).toList();
     }

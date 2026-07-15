@@ -18,6 +18,7 @@ void main() {
       isFeatured: false,
       rating: 4.8,
       hasPromotion: true,
+      stock: 10,
     );
 
     await tester.pumpWidget(

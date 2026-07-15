@@ -17,6 +17,7 @@ class FakeProductRemoteDataSource implements ProductRemoteDataSource {
         isFeatured: false,
         rating: 4.8,
         hasPromotion: true,
+        stock: 10,
       ),
     ]);
   }

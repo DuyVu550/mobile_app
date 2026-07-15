@@ -36,9 +36,13 @@ class ProfileScreen extends ConsumerWidget {
   }
 
   void _editProfile(BuildContext context, WidgetRef ref, AppUser user) {
-    final nameController = TextEditingController(text: user.displayName);
-    final avatarController = TextEditingController(text: user.photoUrl);
-    String selectedAvatar = user.photoUrl ?? '';
+    final profile = ref.read(userProfileProvider).valueOrNull;
+    final displayName = profile?['displayName'] ?? user.displayName ?? '';
+    final photoUrl = profile?['photoUrl'] ?? user.photoUrl ?? '';
+
+    final nameController = TextEditingController(text: displayName);
+    final avatarController = TextEditingController(text: photoUrl);
+    String selectedAvatar = photoUrl;
     bool isLoading = false;
     bool isUploadingImage = false;
 
@@ -336,7 +340,6 @@ class ProfileScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authStateProvider);
     final profileAsync = ref.watch(userProfileProvider);
-    final role = profileAsync.valueOrNull?['role'];
 
     return Scaffold(
       appBar: AppBar(
@@ -346,9 +349,15 @@ class ProfileScreen extends ConsumerWidget {
         foregroundColor: Colors.white,
       ),
       body: authState.when(
-        data: (user) => user == null
-            ? const Center(child: Text('Chưa đăng nhập.'))
-            : ListView(
+        data: (user) {
+          if (user == null) {
+            return const Center(child: Text('Chưa đăng nhập.'));
+          }
+          final profile = profileAsync.valueOrNull;
+          final displayName = profile?['displayName'] ?? user.displayName ?? 'Chưa đặt tên';
+          final photoUrl = profile?['photoUrl'] ?? user.photoUrl;
+
+          return ListView(
                 padding: const EdgeInsets.all(24),
                 children: [
                   Center(
@@ -358,12 +367,12 @@ class ProfileScreen extends ConsumerWidget {
                           radius: 48,
                           backgroundColor: Colors.amber.shade100,
                           backgroundImage:
-                              user.photoUrl != null && user.photoUrl!.isNotEmpty
-                              ? NetworkImage(user.photoUrl!)
+                              photoUrl != null && photoUrl.isNotEmpty
+                              ? NetworkImage(photoUrl)
                               : null,
-                          child: user.photoUrl == null || user.photoUrl!.isEmpty
+                          child: photoUrl == null || photoUrl.isEmpty
                               ? Text(
-                                  _initials(user.displayName, user.email),
+                                  _initials(displayName, user.email),
                                   style: const TextStyle(
                                     fontSize: 32,
                                     fontWeight: FontWeight.bold,
@@ -402,9 +411,7 @@ class ProfileScreen extends ConsumerWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          user.displayName?.isNotEmpty == true
-                              ? user.displayName!
-                              : 'Chưa đặt tên',
+                          displayName,
                           style: const TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.bold,
@@ -463,7 +470,8 @@ class ProfileScreen extends ConsumerWidget {
                     ),
                   ),
                 ],
-              ),
+              );
+        },
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text('Lỗi: $e')),
       ),

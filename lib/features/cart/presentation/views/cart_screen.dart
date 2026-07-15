@@ -9,6 +9,23 @@ class CartScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.listen<AsyncValue<void>>(cartActionControllerProvider, (previous, next) {
+      next.whenOrNull(
+        error: (error, stackTrace) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                error is Exception
+                    ? error.toString().replaceFirst('Exception: ', '')
+                    : 'Đã xảy ra lỗi: $error',
+              ),
+              backgroundColor: Colors.redAccent,
+            ),
+          );
+        },
+      );
+    });
+
     final cartState = ref.watch(cartItemsProvider);
     final totalPrice = ref.watch(cartTotalPriceProvider);
 

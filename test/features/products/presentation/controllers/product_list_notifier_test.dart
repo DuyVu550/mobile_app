@@ -21,6 +21,7 @@ class FakeProductRepository implements ProductRepository {
         isFeatured: false,
         rating: 4.8,
         hasPromotion: true,
+        stock: 10,
         specifications: {
           'Màn hình': '6.7 inch Super Retina XDR',
           'RAM': '8 GB',
@@ -36,6 +37,7 @@ class FakeProductRepository implements ProductRepository {
         isFeatured: false,
         rating: 4.5,
         hasPromotion: false,
+        stock: 10,
         specifications: {
           'Vi xử lý': 'Apple M3',
           'RAM': '16 GB',

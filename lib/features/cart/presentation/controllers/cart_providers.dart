@@ -70,6 +70,32 @@ class CartActionNotifier extends AutoDisposeAsyncNotifier<void> {
   Future<void> add(String productId, int quantity) async {
     final auth = ref.read(authStateProvider).valueOrNull;
     if (auth == null) return;
+
+    // Validate stock limits
+    final productsState = ref.read(productListNotifierProvider);
+    final products = productsState.products.valueOrNull ?? [];
+    final product = products.firstWhere(
+      (p) => p.id == productId,
+      orElse: () => throw Exception('Không tìm thấy sản phẩm.'),
+    );
+
+    final cartItems = ref.read(cartStreamProvider).valueOrNull ?? [];
+    CartItemModel? existingItem;
+    for (final item in cartItems) {
+      if (item.productId == productId) {
+        existingItem = item;
+        break;
+      }
+    }
+    final existingQty = existingItem?.quantity ?? 0;
+
+    if (product.stock <= 0) {
+      throw Exception('Sản phẩm đã hết hàng!');
+    }
+    if (existingQty + quantity > product.stock) {
+      throw Exception('Không thể thêm. Số lượng trong giỏ hàng ($existingQty) cộng thêm ($quantity) vượt quá số lượng hàng còn lại (${product.stock}).');
+    }
+
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() =>
         ref.read(cartRepositoryProvider).addToCart(auth.uid, productId, quantity));
@@ -78,6 +104,19 @@ class CartActionNotifier extends AutoDisposeAsyncNotifier<void> {
   Future<void> updateQty(String productId, int quantity) async {
     final auth = ref.read(authStateProvider).valueOrNull;
     if (auth == null) return;
+
+    // Validate stock limits
+    final productsState = ref.read(productListNotifierProvider);
+    final products = productsState.products.valueOrNull ?? [];
+    final product = products.firstWhere(
+      (p) => p.id == productId,
+      orElse: () => throw Exception('Không tìm thấy sản phẩm.'),
+    );
+
+    if (quantity > product.stock) {
+      throw Exception('Không thể cập nhật. Số lượng ($quantity) vượt quá số lượng hàng còn lại (${product.stock}).');
+    }
+
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() =>
         ref.read(cartRepositoryProvider).updateQuantity(auth.uid, productId, quantity));

@@ -11,6 +11,22 @@ class ProductDetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.listen<AsyncValue<void>>(cartActionControllerProvider, (previous, next) {
+      next.whenOrNull(
+        error: (error, stackTrace) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                error is Exception
+                    ? error.toString().replaceFirst('Exception: ', '')
+                    : 'Đã xảy ra lỗi: $error',
+              ),
+              backgroundColor: Colors.redAccent,
+            ),
+          );
+        },
+      );
+    });
     return Scaffold(
       appBar: AppBar(
         title: Text(product.name),
@@ -47,13 +63,28 @@ class ProductDetailScreen extends ConsumerWidget {
                     style: TextStyle(color: Colors.grey[600], fontSize: 16),
                   ),
                   const SizedBox(height: 12),
-                  Text(
-                    formatPrice(product.price),
-                    style: const TextStyle(
-                      color: Colors.redAccent,
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        formatPrice(product.price),
+                        style: const TextStyle(
+                          color: Colors.redAccent,
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        product.stock > 0
+                            ? 'Còn lại: ${product.stock}'
+                            : 'Hết hàng',
+                        style: TextStyle(
+                          color: product.stock > 0 ? Colors.green : Colors.red,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
                   const Divider(height: 24),
                   Text(
@@ -133,15 +164,21 @@ class ProductDetailScreen extends ConsumerWidget {
           padding: const EdgeInsets.all(8.0),
           child: FilledButton.icon(
             icon: const Icon(Icons.add_shopping_cart),
-            label: const Text('Thêm vào giỏ hàng'),
-            onPressed: () async {
-              await ref.read(cartActionControllerProvider.notifier).add(product.id, 1);
-              if (context.mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Đã thêm sản phẩm vào giỏ hàng!')),
-                );
-              }
-            },
+            label: Text(product.stock <= 0 ? 'Hết hàng' : 'Thêm vào giỏ hàng'),
+            onPressed: product.stock <= 0
+                ? null
+                : () async {
+                    await ref.read(cartActionControllerProvider.notifier).add(product.id, 1);
+                    final cartState = ref.read(cartActionControllerProvider);
+                    if (!cartState.hasError && context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Đã thêm sản phẩm vào giỏ hàng!'),
+                          backgroundColor: Colors.green,
+                        ),
+                      );
+                    }
+                  },
           ),
         ),
       ),

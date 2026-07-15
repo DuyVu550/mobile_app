@@ -16,6 +16,7 @@ class ProductModel with _$ProductModel implements Product {
     required bool isFeatured,
     required double rating,
     required bool hasPromotion,
+    required int stock,
     Map<String, String>? specifications,
   }) = _ProductModel;
 
@@ -42,6 +43,7 @@ class ProductModel with _$ProductModel implements Product {
       isFeatured: (data['isFeatured'] ?? false) as bool,
       rating: ((data['rating'] ?? 0.0) as num).toDouble(),
       hasPromotion: (data['hasPromotion'] ?? false) as bool,
+      stock: (data['stock'] ?? 0) as int,
       specifications: specs,
     );
   }
@@ -57,6 +59,7 @@ class ProductModel with _$ProductModel implements Product {
       isFeatured: isFeatured,
       rating: rating,
       hasPromotion: hasPromotion,
+      stock: stock,
       specifications: specifications,
     );
   }

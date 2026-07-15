@@ -7,6 +7,9 @@ import '../../../products/presentation/views/category_admin_screen.dart';
 import '../../../products/presentation/views/product_admin_screen.dart';
 import '../../../products/presentation/views/brand_admin_screen.dart';
 import '../../../../features/orders/presentation/views/order_admin_screen.dart';
+import '../../../../features/orders/presentation/views/revenue_admin_screen.dart';
+import '../../../../features/orders/presentation/views/top_products_admin_screen.dart';
+import '../../../../features/cart/presentation/views/promotion_admin_screen.dart';
 import '../../../../features/feedback/presentation/views/feedback_admin_screen.dart';
 
 class AdminHomeScreen extends ConsumerStatefulWidget {
@@ -26,6 +29,9 @@ class _AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
     'QUẢN LÝ SẢN PHẨM',
     'QUẢN LÝ THƯƠNG HIỆU',
     'QUẢN LÝ ĐƠN HÀNG',
+    'DOANH THU',
+    'BÁN CHẠY NHẤT',
+    'KHUYẾN MÃI',
     'QUẢN LÝ PHẢN HỒI',
     'HỒ SƠ CÁ NHÂN',
   ];
@@ -138,8 +144,14 @@ class _AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
       case 4:
         return const OrderAdminScreen();
       case 5:
-        return const FeedbackAdminScreen();
+        return const RevenueAdminScreen();
       case 6:
+        return const TopProductsAdminScreen();
+      case 7:
+        return const PromotionAdminScreen();
+      case 8:
+        return const FeedbackAdminScreen();
+      case 9:
         return const ProfileScreen();
       default:
         return const SizedBox.shrink();
@@ -161,9 +173,9 @@ class _AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
 
     if (user == null) return const SizedBox.shrink();
 
-    final displayName = user.displayName ?? profile?['displayName'] ?? '';
+    final displayName = profile?['displayName'] ?? user.displayName ?? '';
     final email = user.email;
-    final photoUrl = user.photoUrl ?? profile?['photoUrl'];
+    final photoUrl = profile?['photoUrl'] ?? user.photoUrl;
 
     return Material(
       color: Colors.white,
@@ -250,15 +262,26 @@ class _AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
               ],
             ),
           ),
-          // Sidebar Items
-          _buildSidebarItem(0, Icons.dashboard_outlined, 'Tổng quan'),
-          _buildSidebarItem(1, Icons.category_outlined, 'Quản lý thể loại'),
-          _buildSidebarItem(2, Icons.shopping_bag_outlined, 'Quản lý sản phẩm'),
-          _buildSidebarItem(3, Icons.business_outlined, 'Quản lý thương hiệu'),
-          _buildSidebarItem(4, Icons.receipt_long, 'Quản lý đơn hàng'),
-          _buildSidebarItem(5, Icons.feedback_outlined, 'Quản lý phản hồi'),
-          _buildSidebarItem(6, Icons.person_outline, 'Hồ sơ cá nhân'),
-          const Spacer(),
+          // Sidebar Items (Scrollable to prevent overflow)
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _buildSidebarItem(0, Icons.dashboard_outlined, 'Tổng quan'),
+                  _buildSidebarItem(1, Icons.category_outlined, 'Quản lý thể loại'),
+                  _buildSidebarItem(2, Icons.shopping_bag_outlined, 'Quản lý sản phẩm'),
+                  _buildSidebarItem(3, Icons.business_outlined, 'Quản lý thương hiệu'),
+                  _buildSidebarItem(4, Icons.receipt_long, 'Quản lý đơn hàng'),
+                  _buildSidebarItem(5, Icons.bar_chart_rounded, 'Doanh thu'),
+                  _buildSidebarItem(6, Icons.leaderboard_outlined, 'Bán chạy nhất'),
+                  _buildSidebarItem(7, Icons.local_offer_outlined, 'Khuyến mãi'),
+                  _buildSidebarItem(8, Icons.feedback_outlined, 'Quản lý phản hồi'),
+                  _buildSidebarItem(9, Icons.person_outline, 'Hồ sơ cá nhân'),
+                ],
+              ),
+            ),
+          ),
           Divider(color: Colors.grey.shade200),
           Material(
             type: MaterialType.transparency,

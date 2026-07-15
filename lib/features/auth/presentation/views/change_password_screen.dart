@@ -15,7 +15,6 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
   final _currentController = TextEditingController();
   final _newController = TextEditingController();
   final _confirmController = TextEditingController();
-  final bool _obscure = true;
 
   @override
   void dispose() {

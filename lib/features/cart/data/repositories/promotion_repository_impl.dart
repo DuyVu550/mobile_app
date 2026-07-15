@@ -16,6 +16,7 @@ class PromotionRepositoryImpl implements PromotionRepository {
         .snapshots()
         .map((snapshot) => snapshot.docs
             .map<Promotion>((doc) => PromotionModel.fromFirestore(doc.id, doc.data()))
+            .where((p) => !p.isExpired)
             .toList());
   }
 }

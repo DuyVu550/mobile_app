@@ -41,7 +41,9 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
               children: [
                 TextField(
                   controller: nameController,
-                  decoration: const InputDecoration(labelText: 'Tên người nhận'),
+                  decoration: const InputDecoration(
+                    labelText: 'Tên người nhận',
+                  ),
                 ),
                 TextField(
                   controller: phoneController,
@@ -50,7 +52,9 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                 ),
                 TextField(
                   controller: lineController,
-                  decoration: const InputDecoration(labelText: 'Địa chỉ chi tiết'),
+                  decoration: const InputDecoration(
+                    labelText: 'Địa chỉ chi tiết',
+                  ),
                 ),
                 CheckboxListTile(
                   title: const Text('Đặt làm địa chỉ mặc định'),
@@ -73,7 +77,9 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
               onPressed: () async {
                 if (nameController.text.isEmpty ||
                     phoneController.text.isEmpty ||
-                    lineController.text.isEmpty) return;
+                    lineController.text.isEmpty) {
+                  return;
+                }
 
                 try {
                   final repo = ref.read(addressRepositoryProvider);
@@ -133,25 +139,34 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                   child: addressesAsync.when(
                     data: (addresses) {
                       if (addresses.isEmpty) {
-                        return const Center(child: Text('Chưa có địa chỉ nào được lưu.'));
+                        return const Center(
+                          child: Text('Chưa có địa chỉ nào được lưu.'),
+                        );
                       }
                       return ListView.builder(
                         itemCount: addresses.length,
                         itemBuilder: (context, index) {
                           final addr = addresses[index];
                           return ListTile(
-                            title: Text('${addr.receiverName} - ${addr.phoneNumber}'),
+                            title: Text(
+                              '${addr.receiverName} - ${addr.phoneNumber}',
+                            ),
                             subtitle: Text(addr.addressLine),
-                            trailing: addr.isDefault ? const Icon(Icons.check, color: Colors.green) : null,
+                            trailing: addr.isDefault
+                                ? const Icon(Icons.check, color: Colors.green)
+                                : null,
                             onTap: () {
-                              ref.read(checkoutStateProvider.notifier).selectAddress(addr);
+                              ref
+                                  .read(checkoutStateProvider.notifier)
+                                  .selectAddress(addr);
                               Navigator.of(ctx).pop();
                             },
                           );
                         },
                       );
                     },
-                    loading: () => const Center(child: CircularProgressIndicator()),
+                    loading: () =>
+                        const Center(child: CircularProgressIndicator()),
                     error: (err, _) => Center(child: Text('Lỗi: $err')),
                   ),
                 ),
@@ -176,15 +191,20 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
     final suggestedPromos = typedCode.isEmpty
         ? const <Promotion>[]
         : promotions
-            .where((p) => p.code.toUpperCase().contains(typedCode))
-            .toList();
+              .where((p) => p.code.toUpperCase().contains(typedCode))
+              .toList();
 
     double discountAmount = 0.0;
     if (checkoutState.appliedPromotion != null &&
         originalPrice >= checkoutState.appliedPromotion!.minOrderValue) {
-      discountAmount = originalPrice * (checkoutState.appliedPromotion!.discountPercent / 100);
+      discountAmount =
+          originalPrice *
+          (checkoutState.appliedPromotion!.discountPercent / 100);
     }
-    final finalPrice = (originalPrice - discountAmount).clamp(0.0, double.infinity);
+    final finalPrice = (originalPrice - discountAmount).clamp(
+      0.0,
+      double.infinity,
+    );
 
     return Scaffold(
       appBar: AppBar(
@@ -213,9 +233,13 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                               children: [
                                 Text(
                                   '${checkoutState.selectedAddress!.receiverName} (${checkoutState.selectedAddress!.phoneNumber})',
-                                  style: const TextStyle(fontWeight: FontWeight.bold),
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
-                                Text(checkoutState.selectedAddress!.addressLine),
+                                Text(
+                                  checkoutState.selectedAddress!.addressLine,
+                                ),
                               ],
                             ),
                     ),
@@ -230,14 +254,19 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
             const SizedBox(height: 16),
 
             // Payment Method Section
-            const Text('Phương thức thanh toán', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+            const Text(
+              'Phương thức thanh toán',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            ),
             RadioListTile<String>(
               title: const Text('Thanh toán khi nhận hàng (COD)'),
               value: 'COD',
               groupValue: checkoutState.paymentMethod,
               onChanged: (val) {
                 if (val != null) {
-                  ref.read(checkoutStateProvider.notifier).selectPaymentMethod(val);
+                  ref
+                      .read(checkoutStateProvider.notifier)
+                      .selectPaymentMethod(val);
                 }
               },
             ),
@@ -247,14 +276,19 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
               groupValue: checkoutState.paymentMethod,
               onChanged: (val) {
                 if (val != null) {
-                  ref.read(checkoutStateProvider.notifier).selectPaymentMethod(val);
+                  ref
+                      .read(checkoutStateProvider.notifier)
+                      .selectPaymentMethod(val);
                 }
               },
             ),
             const SizedBox(height: 16),
 
             // Promo Code Section
-            const Text('Áp dụng mã khuyến mãi', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+            const Text(
+              'Áp dụng mã khuyến mãi',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            ),
             const SizedBox(height: 8),
             Row(
               children: [
@@ -264,7 +298,10 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                     decoration: const InputDecoration(
                       hintText: 'Nhập mã giảm giá...',
                       border: OutlineInputBorder(),
-                      contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 8,
+                      ),
                     ),
                     onChanged: (_) => setState(() {}),
                   ),
@@ -273,21 +310,33 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                 FilledButton(
                   onPressed: () {
                     final code = _promoController.text.trim().toUpperCase();
-                    final match = promotions.where((p) => p.code.toUpperCase() == code).firstOrNull;
+                    final match = promotions
+                        .where((p) => p.code.toUpperCase() == code)
+                        .firstOrNull;
                     if (match != null) {
                       if (originalPrice >= match.minOrderValue) {
-                        ref.read(checkoutStateProvider.notifier).applyPromotion(match);
+                        ref
+                            .read(checkoutStateProvider.notifier)
+                            .applyPromotion(match);
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Áp dụng mã giảm giá thành công!')),
+                          const SnackBar(
+                            content: Text('Áp dụng mã giảm giá thành công!'),
+                          ),
                         );
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Đơn hàng chưa đạt giá trị tối thiểu ${formatPrice(match.minOrderValue)}')),
+                          SnackBar(
+                            content: Text(
+                              'Đơn hàng chưa đạt giá trị tối thiểu ${formatPrice(match.minOrderValue)}',
+                            ),
+                          ),
                         );
                       }
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Mã giảm giá không hợp lệ.')),
+                        const SnackBar(
+                          content: Text('Mã giảm giá không hợp lệ.'),
+                        ),
                       );
                     }
                   },
@@ -326,13 +375,19 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
               const SizedBox(height: 8),
               Text(
                 'Đã áp dụng mã: ${checkoutState.appliedPromotion!.code} (Giảm ${checkoutState.appliedPromotion!.discountPercent}%)',
-                style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                  color: Colors.green,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ],
             const Divider(height: 32),
 
             // Order Summary
-            const Text('Tổng kết đơn hàng', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+            const Text(
+              'Tổng kết đơn hàng',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            ),
             const SizedBox(height: 12),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -346,17 +401,27 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text('Giảm giá:'),
-                Text('-${formatPrice(discountAmount)}', style: const TextStyle(color: Colors.redAccent)),
+                Text(
+                  '-${formatPrice(discountAmount)}',
+                  style: const TextStyle(color: Colors.redAccent),
+                ),
               ],
             ),
             const SizedBox(height: 8),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text('Tổng thanh toán:', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                const Text(
+                  'Tổng thanh toán:',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
                 Text(
                   formatPrice(finalPrice),
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.redAccent),
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.redAccent,
+                  ),
                 ),
               ],
             ),
@@ -366,17 +431,24 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
             SizedBox(
               width: double.infinity,
               child: FilledButton(
-                onPressed: _isPlacingOrder || checkoutState.selectedAddress == null
+                onPressed:
+                    _isPlacingOrder || checkoutState.selectedAddress == null
                     ? null
                     : () async {
                         setState(() => _isPlacingOrder = true);
                         try {
-                          await ref.read(checkoutStateProvider.notifier).submitOrder(finalPrice);
+                          await ref
+                              .read(checkoutStateProvider.notifier)
+                              .submitOrder(finalPrice);
                           if (mounted) {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Đặt hàng thành công!')),
+                              const SnackBar(
+                                content: Text('Đặt hàng thành công!'),
+                              ),
                             );
-                            Navigator.of(context).popUntil((route) => route.isFirst);
+                            Navigator.of(
+                              context,
+                            ).popUntil((route) => route.isFirst);
                           }
                         } catch (e) {
                           if (mounted) {
@@ -394,7 +466,10 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                     ? const SizedBox(
                         height: 20,
                         width: 20,
-                        child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.white,
+                        ),
                       )
                     : const Text('Đặt hàng'),
               ),

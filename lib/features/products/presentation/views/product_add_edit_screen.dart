@@ -23,6 +23,7 @@ class _ProductAddEditScreenState extends ConsumerState<ProductAddEditScreen> {
   late final TextEditingController _descController;
   late final TextEditingController _priceController;
   late final TextEditingController _imageController;
+  late final TextEditingController _stockController;
 
   String? _selectedCategory;
   String? _selectedBrand;
@@ -42,6 +43,9 @@ class _ProductAddEditScreenState extends ConsumerState<ProductAddEditScreen> {
       text: data != null ? (data['price'] ?? 0.0).toStringAsFixed(0) : '',
     );
     _imageController = TextEditingController(text: data?['imageUrl'] ?? '');
+    _stockController = TextEditingController(
+      text: data != null ? (data['stock'] ?? 0).toString() : '',
+    );
     _selectedCategory = data?['category'];
     _isFeatured = data?['isFeatured'] ?? false;
     _hasPromotion = data?['hasPromotion'] ?? false;
@@ -67,6 +71,7 @@ class _ProductAddEditScreenState extends ConsumerState<ProductAddEditScreen> {
     _descController.dispose();
     _priceController.dispose();
     _imageController.dispose();
+    _stockController.dispose();
     for (final entry in _specControllers) {
       entry.key.dispose();
       entry.value.dispose();
@@ -167,6 +172,7 @@ class _ProductAddEditScreenState extends ConsumerState<ProductAddEditScreen> {
     }
 
     final double price = double.tryParse(_priceController.text) ?? 0.0;
+    final int stock = int.tryParse(_stockController.text) ?? 0;
 
     // Construct specs map
     final Map<String, String> specs = {};
@@ -187,6 +193,7 @@ class _ProductAddEditScreenState extends ConsumerState<ProductAddEditScreen> {
       'brand': _selectedBrand,
       'isFeatured': _isFeatured,
       'hasPromotion': _hasPromotion,
+      'stock': stock,
       'rating': widget.productData?['rating'] ?? 5.0,
       'specifications': specs.isNotEmpty ? specs : null,
     };
@@ -273,6 +280,21 @@ class _ProductAddEditScreenState extends ConsumerState<ProductAddEditScreen> {
                 validator: (v) {
                   if (v == null || v.isEmpty) return 'Vui lòng nhập giá';
                   if (double.tryParse(v) == null) return 'Giá trị không hợp lệ';
+                  return null;
+                },
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _stockController,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                  labelText: 'Số lượng hàng trong kho',
+                  border: OutlineInputBorder(),
+                ),
+                validator: (v) {
+                  if (v == null || v.isEmpty) return 'Vui lòng nhập số lượng';
+                  final parsed = int.tryParse(v);
+                  if (parsed == null || parsed < 0) return 'Số lượng không hợp lệ (phải >= 0)';
                   return null;
                 },
               ),

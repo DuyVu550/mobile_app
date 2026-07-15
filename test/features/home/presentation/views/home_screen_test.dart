@@ -24,6 +24,7 @@ class FakeProductRepository implements ProductRepository {
         isFeatured: true,
         rating: 4.8,
         hasPromotion: true,
+        stock: 10,
       ),
       Product(
         id: 'p2',
@@ -35,6 +36,7 @@ class FakeProductRepository implements ProductRepository {
         isFeatured: false,
         rating: 4.5,
         hasPromotion: false,
+        stock: 10,
       ),
     ]));
   }

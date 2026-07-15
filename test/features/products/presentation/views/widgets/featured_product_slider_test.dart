@@ -21,6 +21,7 @@ void main() {
         isFeatured: true,
         rating: 4.5,
         hasPromotion: false,
+        stock: 10,
       ),
       const Product(
         id: 'p2',
@@ -32,6 +33,7 @@ void main() {
         isFeatured: true,
         rating: 4.7,
         hasPromotion: true,
+        stock: 10,
       ),
     ];
 
