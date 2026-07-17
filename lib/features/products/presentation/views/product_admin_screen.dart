@@ -172,7 +172,7 @@ class _ProductAdminScreenState extends ConsumerState<ProductAdminScreen> {
                                 ? Image.network(
                                     imageUrl,
                                     fit: BoxFit.cover,
-                                    errorBuilder: (_, __, ___) => const Icon(Icons.image_not_supported),
+                                    errorBuilder: (_, _, _) => const Icon(Icons.image_not_supported),
                                   )
                                 : const Icon(Icons.image_outlined),
                           ),
