@@ -142,6 +142,15 @@ class ProductCard extends StatelessWidget {
                     product.category,
                     style: TextStyle(color: Colors.grey.shade500, fontSize: 12),
                   ),
+                  const SizedBox(height: 4),
+                  Text(
+                    product.stock > 0 ? 'Còn lại: ${product.stock}' : 'Hết hàng',
+                    style: TextStyle(
+                      color: product.stock > 0 ? Colors.green.shade700 : Colors.redAccent,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
                   const SizedBox(height: 8),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,

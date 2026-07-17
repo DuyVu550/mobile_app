@@ -37,6 +37,7 @@ void main() {
 
     expect(find.text('Điện thoại iPhone 15'), findsOneWidget);
     expect(find.text('Điện thoại'), findsOneWidget);
+    expect(find.text('Còn lại: 10'), findsOneWidget);
     expect(find.text('25.000.000đ'), findsOneWidget);
     expect(find.text('SALE'), findsOneWidget);
     expect(find.text('4.8'), findsOneWidget);
