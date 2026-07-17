@@ -37,7 +37,7 @@ void main() {
     // Tên hiển thị cả ở AppBar và trong nội dung.
     expect(find.text('iPhone 15 Pro'), findsWidgets);
     expect(find.text('Điện thoại'), findsOneWidget);
-    expect(find.text('25000000đ'), findsOneWidget);
+    expect(find.text('25.000.000đ'), findsOneWidget);
     expect(find.text('Điện thoại cao cấp của Apple'), findsOneWidget);
   });
 

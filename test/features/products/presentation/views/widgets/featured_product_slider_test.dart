@@ -51,7 +51,7 @@ void main() {
     );
 
     expect(find.text('iPhone 15'), findsOneWidget);
-    expect(find.text('20000000đ'), findsOneWidget);
+    expect(find.text('20.000.000đ'), findsOneWidget);
 
     await tester.tap(find.text('iPhone 15'));
     await tester.pump();
