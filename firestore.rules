@@ -106,9 +106,9 @@ service cloud.firestore {
       return isAuthenticated() && request.auth.uid == uid;
     }
 
-    // Check if email contains 'admin' word to bootstrap admin role on create
+    // Check if email is the exact admin email address to bootstrap admin role
     function emailContainsAdmin() {
-      return 'email' in request.auth.token && request.auth.token.email.lower().matches('.*admin.*');
+      return 'email' in request.auth.token && request.auth.token.email.lower() == 'admin123@gmail.com';
     }
 
     // ===============================================================
