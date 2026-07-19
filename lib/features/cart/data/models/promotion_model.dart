@@ -3,22 +3,14 @@ import 'package:toy_app/features/cart/domain/entities/promotion.dart';
 
 class PromotionModel extends Promotion {
   const PromotionModel({
-    required String id,
-    required String code,
-    required String description,
-    required double discountPercent,
-    required double minOrderValue,
-    required bool isActive,
-    DateTime? endDate,
-  }) : super(
-          id: id,
-          code: code,
-          description: description,
-          discountPercent: discountPercent,
-          minOrderValue: minOrderValue,
-          isActive: isActive,
-          endDate: endDate,
-        );
+    required super.id,
+    required super.code,
+    required super.description,
+    required super.discountPercent,
+    required super.minOrderValue,
+    required super.isActive,
+    super.endDate,
+  });
 
   factory PromotionModel.fromFirestore(String id, Map<String, dynamic> data) {
     DateTime? parsedEndDate;
