@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../auth/presentation/controllers/auth_action_controller.dart';
 import '../../../auth/presentation/views/profile_screen.dart';
 import '../../../products/presentation/controllers/product_list_notifier.dart';
 import '../../../products/domain/entities/product.dart';
 import '../../../products/presentation/views/widgets/product_card.dart';
 import '../../../products/presentation/views/widgets/featured_product_slider.dart';
 import '../../../products/presentation/views/widgets/product_filter_bottom_sheet.dart';
-import 'package:toy_app/features/cart/presentation/controllers/cart_providers.dart';
-import 'package:toy_app/features/cart/presentation/views/cart_screen.dart';
+import 'package:toy_app/features/cart/presentation/views/cart_icon_button.dart';
 import 'package:toy_app/features/orders/presentation/views/order_history_screen.dart';
+import 'package:toy_app/features/feedback/presentation/views/feedback_screen.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -19,13 +18,69 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
+  int _currentIndex = 0;
+
+  final List<Widget> _screens = const [
+    ProductListScreen(),
+    OrderHistoryScreen(),
+    FeedbackScreen(),
+    ProfileScreen(),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: IndexedStack(
+        index: _currentIndex,
+        children: _screens,
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+        type: BottomNavigationBarType.fixed,
+        selectedItemColor: Colors.indigo,
+        unselectedItemColor: Colors.grey,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Trang chủ',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.receipt_long),
+            label: 'Đơn hàng',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.feedback),
+            label: 'Phản hồi',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Hồ sơ',
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class ProductListScreen extends ConsumerStatefulWidget {
+  const ProductListScreen({super.key});
+
+  @override
+  ConsumerState<ProductListScreen> createState() => _ProductListScreenState();
+}
+
+class _ProductListScreenState extends ConsumerState<ProductListScreen> {
   late final TextEditingController _searchController;
 
   @override
   void initState() {
     super.initState();
     _searchController = TextEditingController();
-    // Rebuild để bật/tắt nút xóa khi nội dung ô tìm kiếm thay đổi.
     _searchController.addListener(() => setState(() {}));
   }
 
@@ -42,7 +97,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final categoriesAsync = ref.watch(categoriesProvider);
     final categories = categoriesAsync.valueOrNull ?? const ['Tất cả'];
     final listState = ref.watch(productListNotifierProvider);
-    final cartCount = ref.watch(cartItemCountProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -50,81 +104,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         backgroundColor: Colors.indigo,
         foregroundColor: Colors.white,
         elevation: 0,
-        actions: [
-          Stack(
-            alignment: Alignment.center,
-            children: [
-              IconButton(
-                icon: const Icon(Icons.shopping_cart),
-                onPressed: () => Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => const CartScreen()),
-                ),
-              ),
-              if (cartCount > 0)
-                Positioned(
-                  right: 8,
-                  top: 8,
-                  child: Container(
-                    padding: const EdgeInsets.all(2),
-                    decoration: BoxDecoration(
-                      color: Colors.red,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    constraints: const BoxConstraints(
-                      minWidth: 16,
-                      minHeight: 16,
-                    ),
-                    child: Text(
-                      '$cartCount',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ),
-            ],
-          ),
-          IconButton(
-            icon: const Icon(Icons.receipt_long),
-            onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => const OrderHistoryScreen()),
-            ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.person),
-            onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => const ProfileScreen()),
-            ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () async {
-              final confirmed = await showDialog<bool>(
-                context: context,
-                builder: (ctx) => AlertDialog(
-                  title: const Text('Đăng xuất'),
-                  content: const Text('Bạn có chắc muốn đăng xuất?'),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.of(ctx).pop(false),
-                      child: const Text('Hủy'),
-                    ),
-                    FilledButton(
-                      onPressed: () => Navigator.of(ctx).pop(true),
-                      child: const Text('Đăng xuất'),
-                    ),
-                  ],
-                ),
-              );
-
-              if (confirmed == true) {
-                await ref.read(authActionControllerProvider.notifier).signOut();
-              }
-            },
-          ),
+        actions: const [
+          CartIconButton(),
         ],
       ),
       body: Column(
@@ -185,7 +166,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ],
             ),
           ),
-          // Thanh danh mục cuộn ngang.
           SizedBox(
             height: 48,
             child: ListView.builder(
@@ -221,7 +201,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     child: Text('Không tìm thấy sản phẩm nào.'),
                   );
                 }
-                // Chỉ hiển thị slider nổi bật khi đang ở tab 'Tất cả'.
                 final showFeatured = listState.selectedCategory == 'Tất cả';
                 final featured = showFeatured
                     ? products.where((p) => p.isFeatured).toList()

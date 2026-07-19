@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:toy_app/core/utils/string_utils.dart';
 import 'package:toy_app/features/orders/presentation/controllers/order_providers.dart';
+import 'package:toy_app/features/cart/presentation/views/cart_icon_button.dart';
 
 class OrderHistoryScreen extends StatelessWidget {
   const OrderHistoryScreen({super.key});
@@ -15,6 +16,9 @@ class OrderHistoryScreen extends StatelessWidget {
           title: const Text('Lịch sử mua hàng'),
           backgroundColor: Colors.indigo,
           foregroundColor: Colors.white,
+          actions: const [
+            CartIconButton(),
+          ],
           bottom: const TabBar(
             labelColor: Colors.white,
             unselectedLabelColor: Colors.white70,
