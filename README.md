@@ -1,6 +1,6 @@
-# Toy App
+# Mobile Tech Store
 
-Ứng dụng thương mại điện tử bán đồ chơi và đồ điện tử được phát triển bằng Flutter và Firebase.
+Ứng dụng thương mại điện tử bán đồ điện tử được phát triển bằng Flutter và Firebase.
 
 ## Công nghệ sử dụng
 
@@ -18,6 +18,13 @@ Dự án được thiết kế theo phương pháp Clean Architecture chia làm 
 - Presentation: Chứa các Widget (Views) và các StateNotifier/Providers để quản lý trạng thái và logic giao diện.
 
 ## Các tính năng chính
+
+### Giao diện & Điều hướng (UI & Navigation)
+- **Thanh điều hướng dưới (Bottom Navigation Bar)**: Giúp người dùng dễ dàng chuyển đổi nhanh chóng giữa các màn hình chính:
+  - **Trang chủ**: Tìm kiếm, lọc danh mục sản phẩm và danh sách sản phẩm.
+  - **Đơn hàng**: Lịch sử đặt hàng và trạng thái đơn hàng.
+  - **Phản hồi**: Gửi ý kiến đóng góp trực tiếp về ứng dụng.
+  - **Hồ sơ**: Quản lý thông tin tài khoản, đổi mật khẩu và đăng xuất.
 
 ### Quyền Admin (Admin Role)
 - Quản lý danh mục sản phẩm (Category): Thêm, sửa, xóa, tìm kiếm và hiển thị danh sách.
@@ -42,17 +49,30 @@ Dự án được thiết kế theo phương pháp Clean Architecture chia làm 
 - Lịch sử đơn hàng: Xem danh sách đơn hàng và lịch trình trạng thái giao nhận.
 - Gửi feedback: Gửi kiến nghị và đánh giá về chất lượng ứng dụng.
 
-## Hướng dẫn chạy ứng dụng
+## Hướng dẫn chạy và triển khai ứng dụng
 
 1. Cài đặt các thư viện:
    ```bash
    flutter pub get
    ```
-2. Chạy ứng dụng trên trình duyệt Chrome hoặc thiết bị giả lập:
+2. Chạy ứng dụng trên trình duyệt Chrome hoặc thiết bị giả lập ở môi trường local:
    ```bash
    flutter run -d chrome
    ```
-3. Cập nhật quy tắc bảo mật Firestore khi có thay đổi (trên Firebase Console hoặc qua CLI):
+3. Triển khai ứng dụng (Deploy):
+   > [!IMPORTANT]
+   > Để các thay đổi code mới nhất xuất hiện trên web đã deploy, bạn **bắt buộc** phải biên dịch lại phiên bản web trước khi deploy lên Firebase:
+   
+   *Bước 3.1. Biên dịch ứng dụng cho nền tảng Web:*
+   ```bash
+   flutter build web
+   ```
+   *Bước 3.2. Deploy lên Firebase Hosting:*
+   ```bash
+   firebase deploy --only hosting
+   ```
+4. Cập nhật quy tắc bảo mật Firestore (nếu có thay đổi trong `firestore.rules`):
    ```bash
    firebase deploy --only firestore:rules
    ```
+

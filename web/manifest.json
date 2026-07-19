@@ -1,6 +1,6 @@
 {
-    "name": "toy_app",
-    "short_name": "toy_app",
+    "name": "Mobile Tech Store",
+    "short_name": "Mobile Tech Store",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
